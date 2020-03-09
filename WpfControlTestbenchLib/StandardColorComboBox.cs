@@ -8,31 +8,37 @@ using System;
 
 namespace WpfTestbench {
 
-  
+
   /// <summary>
   /// Displays all standard WPF colors in a dropdown.
   /// </summary>
-  public class StandardColorComboBox: ComboBox  {
+  public class StandardColorComboBox: ComboBox {
 
-    public static readonly DependencyProperty SelectedColorBrushProperty = 
-    DependencyProperty.Register("SelectedColorBrush", typeof(Brush), typeof(StandardColorComboBox), new PropertyMetadata(selectedColorBrushChanged));
+    public static readonly DependencyProperty SelectedColorBrushProperty =
+      DependencyProperty.Register("SelectedColorBrush", typeof(Brush), typeof(StandardColorComboBox), new PropertyMetadata(SelectedColorBrushChanged));
 
-private static void selectedColorBrushChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-}
 
-    static int newBrushCount=0;
+    private static void SelectedColorBrushChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+      StandardColorComboBox standardColorComboBox = (StandardColorComboBox)d;
+      standardColorComboBox.SetSelectedBrush((Brush)e.NewValue);
+    }
+
 
     /// <summary>
     /// Can be used for binding to the selected color brush. The new brush gets added to SelectedColorBrush if not available yet.
     /// </summary>
     public Brush SelectedColorBrush {
       get { return (Brush)GetValue(SelectedColorBrushProperty); }
-      private set { SetValue(SelectedColorBrushProperty, value);}
+      private set { SetValue(SelectedColorBrushProperty, value); }
     }
 
 
+    static int newBrushCount=0;
+
     public void SetSelectedBrush(Brush setBrush) {
-      if (!(setBrush is SolidColorBrush setSolidColorBrush)) {
+      SolidColorBrush setSolidColorBrush = setBrush as SolidColorBrush;
+
+      if (setSolidColorBrush==null) {
         //not a SolidColorBrush. look for the same brush object
         int itemIndex;
         for (itemIndex = 0; itemIndex < Items.Count; itemIndex++) {
@@ -51,7 +57,8 @@ private static void selectedColorBrushChanged(DependencyObject d, DependencyProp
         int itemIndex;
         for (itemIndex = 0; itemIndex < Items.Count; itemIndex++) {
           ColorSamplePanel colorSamplePanel = (ColorSamplePanel)Items[itemIndex];
-          if (colorSamplePanel.ColorBrush is SolidColorBrush sampleSolidColorBrush && sampleSolidColorBrush.Color==setSolidColorBrush.Color) {
+          SolidColorBrush sampleSolidColorBrush = colorSamplePanel.ColorBrush as SolidColorBrush;
+          if (sampleSolidColorBrush!=null && sampleSolidColorBrush.Color==setSolidColorBrush.Color) {
             SelectedIndex = itemIndex;
             return;
           }
@@ -82,25 +89,25 @@ private static void selectedColorBrushChanged(DependencyObject d, DependencyProp
     //////  }
     //////}
 
-    
+
     //////public static readonly DependencyProperty SelectedColorNameProperty = 
     //////DependencyProperty.Register("SelectedColorName", typeof(string), typeof(ColorSamplePanel), new FrameworkPropertyMetadata("Green"));
 
-    
+
     public StandardColorComboBox() {
       foreach (PropertyInfo brushPropertyInfo in typeof(Brushes).GetProperties()) {
-        SolidColorBrush brush = (SolidColorBrush)brushPropertyInfo.GetValue(null, null)!;
-        Items.Add(new ColorSamplePanel(brushPropertyInfo.Name, brush)); 
+        SolidColorBrush brush = (SolidColorBrush)brushPropertyInfo.GetValue(null, null);
+        Items.Add(new ColorSamplePanel(brushPropertyInfo.Name, brush));
       }
-//////      TextSearch.SetTextPath(this, "ColorName");
+      //////      TextSearch.SetTextPath(this, "ColorName");
       SelectedValuePath = "ColorBrush";
-      SelectionChanged += standardColorComboBox_SelectionChanged;
+      SelectionChanged += StandardColorComboBox_SelectionChanged;
     }
 
 
-    void standardColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+    void StandardColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
       if (e.AddedItems.Count>0) {
-        var colorSamplePanel = (ColorSamplePanel)e.AddedItems[0]!;
+        var colorSamplePanel = (ColorSamplePanel)e.AddedItems[0];
         SelectedColorBrush = colorSamplePanel.ColorBrush;
         //////SetValue(SelectedColorNameProperty, colorSamplePanel.ColorName);
       }
@@ -133,15 +140,15 @@ private static void selectedColorBrushChanged(DependencyObject d, DependencyProp
     ////        foundSolidColorBrush = sampleSolidColorBrush;
     ////      }
     ////    }
-        
+
     ////  }
     ////  return setColor;
     ////}
 
 
-    ////private int square(int p) {
-    ////  return p*p;
-    ////}
+    private int square(int p) {
+      return p*p;
+    }
   }
 
 
@@ -152,8 +159,8 @@ private static void selectedColorBrushChanged(DependencyObject d, DependencyProp
     public string ColorName { get; private set; }
     public Brush ColorBrush { get; private set; }
 
-    readonly Rectangle colorRectangle;
-    readonly TextBlock textBlock;
+    Rectangle colorRectangle;
+    TextBlock textBlock;
 
 
     public ColorSamplePanel(string colorName, Brush colorBrush) {
@@ -162,24 +169,22 @@ private static void selectedColorBrushChanged(DependencyObject d, DependencyProp
       Orientation = Orientation.Horizontal;
       //TextSearch.SetText(this, colorName);
 
-      colorRectangle = new Rectangle {
-        Fill = colorBrush,
-        Margin = new Thickness(2, 0, 2, 0),
-        VerticalAlignment = VerticalAlignment.Center
-      };
+      colorRectangle = new Rectangle();
+      colorRectangle.Fill = colorBrush;
+      colorRectangle.Margin = new Thickness(2, 0, 2, 0);
+      colorRectangle.VerticalAlignment = VerticalAlignment.Center;
       Children.Add(colorRectangle);
 
       this.VerticalAlignment = VerticalAlignment.Stretch;
-      textBlock = new TextBlock {
-        Text = colorName
-      };
+      textBlock = new TextBlock();
+      textBlock.Text = colorName;
       Children.Add(textBlock);
 
-      SizeChanged += colorSamplePanel_SizeChanged;
+      SizeChanged += ColorSamplePanel_SizeChanged;
     }
 
 
-    void colorSamplePanel_SizeChanged(object sender, SizeChangedEventArgs e) {
+    void ColorSamplePanel_SizeChanged(object sender, SizeChangedEventArgs e) {
       double dimensions = e.NewSize.Height * 2 / 3;
       colorRectangle.Height = dimensions;
       colorRectangle.Width = dimensions;

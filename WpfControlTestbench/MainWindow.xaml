@@ -1,9 +1,7 @@
 ﻿<Window x:Class="WpfTestbench.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:WpfTestbench="clr-namespace:WpfTestbench"
-        xmlns:WpfControlTestbenchLib="clr-namespace:WpfTestbench;assembly=WpfControlTestbenchLib"
-        WindowState="Maximized"
+        SizeToContent="WidthAndHeight"
         Title="WPF Control Testbench" >
   <StackPanel HorizontalAlignment="Left" Margin="6">
     <StackPanel.Resources>
@@ -12,6 +10,7 @@
       </Style>
     </StackPanel.Resources>
 
+    <TextBox x:Name="TodoTexBox" AcceptsReturn="True"/>
     <Button Name="StackPanelButton" Content="_StackPanel"/>
     <Button Name="TextBoxButton" Content="_Textbox"/>
   </StackPanel>

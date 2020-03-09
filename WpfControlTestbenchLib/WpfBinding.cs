@@ -31,5 +31,7 @@ namespace WpfTestbench {
       //newBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
       return (BindingExpression)targetFrameworkElement.SetBinding(tragetDependencyProperty, newBinding);
     }
+
+  
   }
 }

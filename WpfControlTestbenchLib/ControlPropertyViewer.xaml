@@ -1,4 +1,21 @@
-﻿<UserControl x:Class="WpfTestbench.ControlPropertyViewer"
+﻿<!--***********************************************************************************
+
+WpfTestbench.ControlPropertyViewer
+==================================
+
+Displays some properties of a control inheriting from FrameworkElement and possibly Control
+  
+Written 2014-2020 by Jürgpeter Huber 
+Contact: PeterCode at Peterbox dot com
+
+To the extent possible under law, the author(s) have dedicated all copyright and 
+related and neighboring rights to this software to the public domain worldwide under
+the Creative Commons 0 license (details see COPYING.txt file, see also
+<http://creativecommons.org/publicdomain/zero/1.0/>). 
+
+This software is distributed without any warranty. 
+************************************************************************************-->
+<UserControl x:Class="WpfTestbench.ControlPropertyViewer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -24,25 +41,21 @@
       <ColumnDefinition Width="50"/>
       <ColumnDefinition Width="50"/>
       <ColumnDefinition Width="50"/>
+      <ColumnDefinition Width="50" Name="BorderLeftColumn"/>
       <ColumnDefinition Width="50" Name="PaddingLeftColumn"/>
       <ColumnDefinition Width="50" Name="PaddingRightColumn"/>
+      <ColumnDefinition Width="50" Name="BorderRightColumn"/>
       <ColumnDefinition Width="50"/>
       <ColumnDefinition Width="50"/>
       <ColumnDefinition Width="50"/>
       <ColumnDefinition Width="50"/>
       <ColumnDefinition Width="5" Name="ColorEmptyColumn"/>
       <ColumnDefinition Width="70" Name="ColorColumn"/>
-      <ColumnDefinition Width="70" Name="BorderColumn"/>
       <ColumnDefinition Width="80" Name="FontColumn"/>
       <ColumnDefinition Width="60" Name="FontSizeColumn"/>
       <ColumnDefinition Width="60" Name="FontWeightColumn"/>
-      <ColumnDefinition Width="50"/>
-      <ColumnDefinition Width="auto"/>
-      <ColumnDefinition Width="50"/>
-      <ColumnDefinition Width="50"/>
-      <ColumnDefinition Width="50"/>
       <ColumnDefinition Width="*"/>
-      <ColumnDefinition/>
+      <ColumnDefinition Width="auto"/>
     </Grid.ColumnDefinitions>
     <Grid.Resources>
       <Style TargetType="ComboBox">
@@ -54,39 +67,44 @@
     </Grid.Resources>
 
     <!--Font and color background-->
-    <Rectangle Grid.Row="0" Grid.Column="12" Grid.ColumnSpan="5" Grid.RowSpan="5" Fill="#40A0A0A0"/>
+    <Rectangle Grid.Row="0" Grid.Column="14" Grid.ColumnSpan="5" Grid.RowSpan="5" Fill="#40A0A0A0"/>
 
     <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Text="Align" FontWeight="Bold"/>
     <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Bottom" Text="Content" FontWeight="Bold"/>
     <TextBlock Grid.Row="0" Grid.Column="3" VerticalAlignment="Bottom" Text="Min" FontWeight="Bold"/>
     <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Bottom" Text="Max" FontWeight="Bold"/>
-    <TextBlock Grid.Row="0" Grid.Column="5" VerticalAlignment="Bottom" Text="Margin" FontWeight="Bold" Background="#40A0A0A0"/>
-    <TextBlock Grid.Row="0" Grid.Column="6" VerticalAlignment="Bottom" Text="Padding" FontWeight="Bold" Background="#80A0A0A0"/>
-    <TextBlock Grid.Row="0" Grid.Column="7" VerticalAlignment="Bottom" Text="Padding" FontWeight="Bold" Background="#80A0A0A0"/>
-    <TextBlock Grid.Row="0" Grid.Column="8" VerticalAlignment="Bottom" Text="Margin" FontWeight="Bold" Background="#40A0A0A0"/>
-    <TextBlock Grid.Row="0" Grid.Column="9" VerticalAlignment="Bottom" Text="Desired" FontWeight="Bold"/>
-    <TextBlock Grid.Row="0" Grid.Column="10" VerticalAlignment="Bottom" Text="Render" FontWeight="Bold"/>
-    <TextBlock Grid.Row="0" Grid.Column="11" VerticalAlignment="Bottom" Text="Actual" FontWeight="Bold"/>
-    <TextBlock Grid.Row="0" Grid.Column="13" VerticalAlignment="Bottom" Text="Color" FontWeight="Bold"/>
-    <TextBlock Grid.Row="0" Grid.Column="15" VerticalAlignment="Bottom" Text="Font" FontWeight="Bold"/>
+    <TextBlock Grid.Row="0" Grid.Column="5" VerticalAlignment="Bottom" Text="Margin" FontWeight="Bold" Background="#40909090"/>
+    <TextBlock Grid.Row="0" Grid.Column="6" VerticalAlignment="Bottom" Text="Border" FontWeight="Bold" Background="#70909090"/>
+    <TextBlock Grid.Row="0" Grid.Column="7" VerticalAlignment="Bottom" Text="Padding" FontWeight="Bold" Background="#B0909090"/>
+    <TextBlock Grid.Row="0" Grid.Column="8" VerticalAlignment="Bottom" Text="Padding" FontWeight="Bold" Background="#B0909090"/>
+    <TextBlock Grid.Row="0" Grid.Column="9" VerticalAlignment="Bottom" Text="Border" FontWeight="Bold" Background="#70909090"/>
+    <TextBlock Grid.Row="0" Grid.Column="10" VerticalAlignment="Bottom" Text="Margin" FontWeight="Bold" Background="#40909090"/>
+    <TextBlock Grid.Row="0" Grid.Column="11" VerticalAlignment="Bottom" Text="Desired" FontWeight="Bold"/>
+    <TextBlock Grid.Row="0" Grid.Column="12" VerticalAlignment="Bottom" Text="Render" FontWeight="Bold"/>
+    <TextBlock Grid.Row="0" Grid.Column="13" VerticalAlignment="Bottom" Text="Actual" FontWeight="Bold"/>
+    <TextBlock Grid.Row="0" Grid.Column="15" VerticalAlignment="Bottom" Text="Color" FontWeight="Bold"/>
+    <TextBlock Grid.Row="0" Grid.Column="16" VerticalAlignment="Bottom" Text="Font" FontWeight="Bold"/>
+    <CheckBox  Grid.Row="0" Grid.Column="20" Name="GridLinesCheckBox" Content="_GridLines" Margin="5,0,5,0" IsChecked="True"/>
 
     <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Text="Width" FontWeight="Bold"/>
     <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Text="Horizontal"/>
     <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Text="Horizontal"/>
     <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Bottom" Text="Width"/>
     <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Bottom" Text="Width"/>
-    <TextBlock Grid.Row="1" Grid.Column="5" VerticalAlignment="Bottom" Text="Left" Background="#40A0A0A0"/>
-    <TextBlock Grid.Row="1" Grid.Column="6" VerticalAlignment="Bottom" Text="Left" Background="#80A0A0A0"/>
-    <TextBlock Grid.Row="1" Grid.Column="7" VerticalAlignment="Bottom" Text="Right" Background="#80A0A0A0"/>
-    <TextBlock Grid.Row="1" Grid.Column="8" VerticalAlignment="Bottom" Text="Right" Background="#40A0A0A0"/>
-    <TextBlock Grid.Row="1" Grid.Column="9" VerticalAlignment="Bottom" Text="Width"/>
-    <TextBlock Grid.Row="1" Grid.Column="10" VerticalAlignment="Bottom" Text="Width"/>
+    <TextBlock Grid.Row="1" Grid.Column="5" VerticalAlignment="Bottom" Text="Left" Background="#40909090"/>
+    <TextBlock Grid.Row="1" Grid.Column="6" VerticalAlignment="Bottom" Text="Left" Background="#70909090"/>
+    <TextBlock Grid.Row="1" Grid.Column="7" VerticalAlignment="Bottom" Text="Left" Background="#B0909090"/>
+    <TextBlock Grid.Row="1" Grid.Column="8" VerticalAlignment="Bottom" Text="Right" Background="#B0909090"/>
+    <TextBlock Grid.Row="1" Grid.Column="9" VerticalAlignment="Bottom" Text="Right" Background="#70909090"/>
+    <TextBlock Grid.Row="1" Grid.Column="10" VerticalAlignment="Bottom" Text="Right" Background="#40909090"/>
     <TextBlock Grid.Row="1" Grid.Column="11" VerticalAlignment="Bottom" Text="Width"/>
-    <TextBlock Grid.Row="1" Grid.Column="13" VerticalAlignment="Bottom" Text="Foreground"/>
-    <TextBlock Grid.Row="1" Grid.Column="14" VerticalAlignment="Bottom" Text="Border"/>
-    <TextBlock Grid.Row="1" Grid.Column="15" VerticalAlignment="Bottom" Text="Font"/>
-    <TextBlock Grid.Row="1" Grid.Column="16" VerticalAlignment="Bottom" Text="Size"/>
-    <TextBlock Grid.Row="1" Grid.Column="17" VerticalAlignment="Bottom" Text="Weight"/>
+    <TextBlock Grid.Row="1" Grid.Column="12" VerticalAlignment="Bottom" Text="Width"/>
+    <TextBlock Grid.Row="1" Grid.Column="13" VerticalAlignment="Bottom" Text="Width"/>
+    <TextBlock Grid.Row="1" Grid.Column="15" VerticalAlignment="Bottom" Text="Border"/>
+    <TextBlock Grid.Row="1" Grid.Column="16" VerticalAlignment="Bottom" Text="Font"/>
+    <TextBlock Grid.Row="1" Grid.Column="17" VerticalAlignment="Bottom" Text="Size"/>
+    <TextBlock Grid.Row="1" Grid.Column="18" VerticalAlignment="Bottom" Text="Weight"/>
+    <Button    Grid.Row="1" Grid.Column="20" Name="NextTestButton" Content="_Next Test" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
 
     <TextBox   Grid.Row="2" Grid.Column="0" Name="WidthTextBox"/>
     <ComboBox  Grid.Row="2" Grid.Column="1" Name="HorizontalAlignmentComboBox"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -94,35 +112,39 @@
     <TextBox   Grid.Row="2" Grid.Column="3" Name="MinWidthTextBox"/>
     <TextBox   Grid.Row="2" Grid.Column="4" Name="MaxWidthTextBox"/>
     <TextBox   Grid.Row="2" Grid.Column="5" Name="MarginLeftTextBox"/>
-    <TextBox   Grid.Row="2" Grid.Column="6" Name="PaddingLeftTextBox"/>
-    <TextBox   Grid.Row="2" Grid.Column="7" Name="PaddingRightTextBox"/>
-    <TextBox   Grid.Row="2" Grid.Column="8" Name="MarginRightTextBox"/>
-    <TextBox   Grid.Row="2" Grid.Column="9" Name="DesiredWidthTextBox" IsReadOnly="True" IsEnabled="False"/>
-    <TextBox   Grid.Row="2" Grid.Column="10" Name="RenderWidthTextBox" IsReadOnly="True" IsEnabled="False"/>
-    <TextBox   Grid.Row="2" Grid.Column="11" Name="ActualWidthTextBox" IsReadOnly="True" IsEnabled="False"/>
-    <WpfTestbench:StandardColorComboBox Grid.Row="2" Grid.Column="13" x:Name="ForegroundColorComboBox" VerticalAlignment="Center"/>
-    <WpfTestbench:StandardColorComboBox Grid.Row="2" Grid.Column="14" x:Name="BorderColorComboBox" VerticalAlignment="Center"/>
-    <!--<ComboBox Grid.Row="2" Grid.Column="15" Name="FontFamilyComboBox"/> further down, because too many lines-->
-    <ComboBox  Grid.Row="2" Grid.Column="16" Name="FontSizeComboBox" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
-    <ComboBox  Grid.Row="2" Grid.Column="17" Name="FontWeightComboBox" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+    <TextBox   Grid.Row="2" Grid.Column="6" Name="BorderLeftTextBox"/>
+    <TextBox   Grid.Row="2" Grid.Column="7" Name="PaddingLeftTextBox"/>
+    <TextBox   Grid.Row="2" Grid.Column="8" Name="PaddingRightTextBox"/>
+    <TextBox   Grid.Row="2" Grid.Column="9" Name="BorderRightTextBox"/>
+    <TextBox   Grid.Row="2" Grid.Column="10" Name="MarginRightTextBox"/>
+    <TextBox   Grid.Row="2" Grid.Column="11" Name="DesiredWidthTextBox" IsReadOnly="True" IsEnabled="False"/>
+    <TextBox   Grid.Row="2" Grid.Column="12" Name="RenderWidthTextBox" IsReadOnly="True" IsEnabled="False"/>
+    <TextBox   Grid.Row="2" Grid.Column="13" Name="ActualWidthTextBox" IsReadOnly="True" IsEnabled="False"/>
+    <WpfTestbench:StandardColorComboBox Grid.Row="2" Grid.Column="15" x:Name="BorderColorComboBox" VerticalAlignment="Center"/>
+    <!--<ComboBox Grid.Row="2" Grid.Column="16" Name="FontFamilyComboBox"/> further down, because too many lines-->
+    <ComboBox  Grid.Row="2" Grid.Column="17" Name="FontSizeComboBox" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+    <ComboBox  Grid.Row="2" Grid.Column="18" Name="FontWeightComboBox" VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
+    <Button    Grid.Row="2" Grid.Column="20" Name="TemplateButton" Content="_Show Template" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
 
     <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Bottom" Text="Height" FontWeight="Bold"/>
     <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Bottom" Text="Vertical"/>
     <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Bottom" Text="Vertical"/>
     <TextBlock Grid.Row="3" Grid.Column="3" VerticalAlignment="Bottom" Text="Height"/>
     <TextBlock Grid.Row="3" Grid.Column="4" VerticalAlignment="Bottom" Text="Height"/>
-    <TextBlock Grid.Row="3" Grid.Column="5" VerticalAlignment="Bottom" Text="Top" Background="#40A0A0A0"/>
-    <TextBlock Grid.Row="3" Grid.Column="6" VerticalAlignment="Bottom" Text="Top" Background="#80A0A0A0"/>
-    <TextBlock Grid.Row="3" Grid.Column="7" VerticalAlignment="Bottom" Text="Bottom" Background="#80A0A0A0"/>
-    <TextBlock Grid.Row="3" Grid.Column="8" VerticalAlignment="Bottom" Text="Bottom" Background="#40A0A0A0"/>
-    <TextBlock Grid.Row="3" Grid.Column="9" VerticalAlignment="Bottom" Text="Height"/>
-    <TextBlock Grid.Row="3" Grid.Column="10" VerticalAlignment="Bottom" Text="Height"/>
+    <TextBlock Grid.Row="3" Grid.Column="5" VerticalAlignment="Bottom" Text="Top" Background="#B0909090"/>
+    <TextBlock Grid.Row="3" Grid.Column="6" VerticalAlignment="Bottom" Text="Top" Background="#70909090"/>
+    <TextBlock Grid.Row="3" Grid.Column="7" VerticalAlignment="Bottom" Text="Top" Background="#B0909090"/>
+    <TextBlock Grid.Row="3" Grid.Column="8" VerticalAlignment="Bottom" Text="Bottom" Background="#B0909090"/>
+    <TextBlock Grid.Row="3" Grid.Column="9" VerticalAlignment="Bottom" Text="Bottom" Background="#70909090"/>
+    <TextBlock Grid.Row="3" Grid.Column="10" VerticalAlignment="Bottom" Text="Bottom" Background="#B0909090"/>
     <TextBlock Grid.Row="3" Grid.Column="11" VerticalAlignment="Bottom" Text="Height"/>
-    <TextBlock Grid.Row="3" Grid.Column="13" VerticalAlignment="Bottom" Text="Background"/>
-    <TextBlock Grid.Row="3" Grid.Column="14" VerticalAlignment="Bottom" Text="Thickness"/>
-    <TextBlock Grid.Row="3" Grid.Column="16" VerticalAlignment="Bottom" Text="Style"/>
-    <TextBlock Grid.Row="3" Grid.Column="17" VerticalAlignment="Bottom" Text="Stretch"/>
-    <Button    Grid.Row="3" Grid.Column="19" Name="TemplateButton" Content="_Template" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
+    <TextBlock Grid.Row="3" Grid.Column="12" VerticalAlignment="Bottom" Text="Height"/>
+    <TextBlock Grid.Row="3" Grid.Column="13" VerticalAlignment="Bottom" Text="Height"/>
+    <TextBlock Grid.Row="3" Grid.Column="15" VerticalAlignment="Bottom" Text="Background"/>
+    <TextBlock Grid.Row="3" Grid.Column="16" VerticalAlignment="Bottom" Text="Foreground"/>
+    <TextBlock Grid.Row="3" Grid.Column="17" VerticalAlignment="Bottom" Text="Style"/>
+    <TextBlock Grid.Row="3" Grid.Column="18" VerticalAlignment="Bottom" Text="Stretch"/>
+    <CheckBox  Grid.Row="3" Grid.Column="20" Name="BreakOnExceptionCheckBox" Content="_Break on Except." Margin="5,0,5,0"/> 
 
     <TextBox   Grid.Row="4" Grid.Column="0" Name="HeightTextBox" />
     <ComboBox  Grid.Row="4" Grid.Column="1" Name="VerticalAlignmentComboBox"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -130,19 +152,21 @@
     <TextBox   Grid.Row="4" Grid.Column="3" Name="MinHeightTextBox"/>
     <TextBox   Grid.Row="4" Grid.Column="4" Name="MaxHeightTextBox"/>
     <TextBox   Grid.Row="4" Grid.Column="5" Name="MarginTopTextBox"/>
-    <TextBox   Grid.Row="4" Grid.Column="6" Name="PaddingTopTextBox"/>
-    <TextBox   Grid.Row="4" Grid.Column="7" Name="PaddingBottomTextBox"/>
-    <TextBox   Grid.Row="4" Grid.Column="8" Name="MarginBottomTextBox"/>
-    <TextBox   Grid.Row="4" Grid.Column="9" Name="DesiredHeightTextBox" IsReadOnly="True" IsEnabled="False"/>
-    <TextBox   Grid.Row="4" Grid.Column="10" Name="RenderHeightTextBox" IsReadOnly="True" IsEnabled="False"/>
-    <TextBox   Grid.Row="4" Grid.Column="11" Name="ActualHeightTextBox" IsReadOnly="True" IsEnabled="False"/>
-    <WpfTestbench:StandardColorComboBox Grid.Row="4" Grid.Column="13" x:Name="BackgroundColorComboBox" VerticalAlignment="Center"/>
-    <TextBox   Grid.Row="4" Grid.Column="14" Name="BorderThicknessTextBox"/>
-    <ComboBox  Grid.Row="4" Grid.Column="16" Name="FontStyleComboBox" VerticalAlignment="Center"/>
-    <ComboBox  Grid.Row="4" Grid.Column="17" Name="FontStretchComboBox" VerticalAlignment="Center"/>
-    <Button    Grid.Row="4" Grid.Column="19" Name="DebugButton" Content="_Debug" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
+    <TextBox   Grid.Row="4" Grid.Column="6" Name="BorderTopTextBox"/>
+    <TextBox   Grid.Row="4" Grid.Column="7" Name="PaddingTopTextBox"/>
+    <TextBox   Grid.Row="4" Grid.Column="8" Name="PaddingBottomTextBox"/>
+    <TextBox   Grid.Row="4" Grid.Column="9" Name="BorderBottomTextBox"/>
+    <TextBox   Grid.Row="4" Grid.Column="10" Name="MarginBottomTextBox"/>
+    <TextBox   Grid.Row="4" Grid.Column="11" Name="DesiredHeightTextBox" IsReadOnly="True" IsEnabled="False"/>
+    <TextBox   Grid.Row="4" Grid.Column="12" Name="RenderHeightTextBox" IsReadOnly="True" IsEnabled="False"/>
+    <TextBox   Grid.Row="4" Grid.Column="13" Name="ActualHeightTextBox" IsReadOnly="True" IsEnabled="False"/>
+    <WpfTestbench:StandardColorComboBox Grid.Row="4" Grid.Column="15" x:Name="BackgroundColorComboBox" VerticalAlignment="Center"/>
+    <WpfTestbench:StandardColorComboBox Grid.Row="4" Grid.Column="16" x:Name="ForegroundColorComboBox" VerticalAlignment="Center"/>
+    <ComboBox  Grid.Row="4" Grid.Column="17" Name="FontStyleComboBox" VerticalAlignment="Center"/>
+    <ComboBox  Grid.Row="4" Grid.Column="18" Name="FontStretchComboBox" VerticalAlignment="Center"/>
+    <Button    Grid.Row="4" Grid.Column="20" Name="DebugButton" Content="Switch to _Debugger" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
 
-    <ComboBox Grid.Row="2" Grid.Column="15" Name="FontFamilyComboBox"  VerticalAlignment="Center"
+    <ComboBox Grid.Row="2" Grid.Column="16" Name="FontFamilyComboBox"  VerticalAlignment="Center"
           xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
           ItemTemplate="{DynamicResource FontTemplate}">
       <ComboBox.Resources>

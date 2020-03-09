@@ -5,7 +5,7 @@
         xmlns:WpfControlTestbenchLib="clr-namespace:WpfTestbench;assembly=WpfControlTestbenchLib"
         xmlns:TracedControlsLib="clr-namespace:WpfTestbench;assembly=TracedControlsLib"
         Title="StackPanel Testbench">
-    <WpfControlTestbenchLib:WpfControlTestbench>
+    <WpfControlTestbenchLib:WpfControlTestbench Name="TestBench">
       <WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>
         <TracedControlsLib:StackPanelTraced Name="TestStackPanelTraced" Background="AliceBlue" Margin="10" />
       </WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>

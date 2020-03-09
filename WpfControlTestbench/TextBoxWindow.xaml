@@ -6,7 +6,7 @@
         xmlns:TracedControlsLib="clr-namespace:WpfTestbench;assembly=TracedControlsLib"
         Title="TextBox Testbench">
   <Grid>
-    <WpfControlTestbenchLib:WpfControlTestbench>
+    <WpfControlTestbenchLib:WpfControlTestbench Name="TestBench">
       <WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>
         <TracedControlsLib:TextBoxTraced Name="TestTextBoxTraced" Background="AliceBlue" Margin="10" />
       </WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>

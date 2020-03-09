@@ -9,6 +9,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TracedControlsLib", "Traced
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfControlTestbenchLib", "WpfControlTestbenchLib\WpfControlTestbenchLib.csproj", "{D928ED42-0208-4F0D-9395-D8C080009D56}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BF01CB05-6AA8-4941-AE94-B95995F5196C}"
+	ProjectSection(SolutionItems) = preProject
+		LayoutLines.PNG = LayoutLines.PNG
+		Overview.PNG = Overview.PNG
+		TestbenchWindowXaml.docx = TestbenchWindowXaml.docx
+		TestbenchWindowXaml.PNG = TestbenchWindowXaml.PNG
+		TestStackPanel.PNG = TestStackPanel.PNG
+		WpfControlTestbench.pptx = WpfControlTestbench.pptx
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TracerLib", "..\TracerLib\TracerLib\TracerLib.csproj", "{9426C418-81F8-4B8B-BBB3-2323C4EDD7F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomControlBaseLib", "..\CustomControlBaseLib\CustomControlBaseLib\CustomControlBaseLib.csproj", "{BFCD5107-BA8D-461B-B81C-C100D31BD8AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +41,14 @@ Global
 		{D928ED42-0208-4F0D-9395-D8C080009D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D928ED42-0208-4F0D-9395-D8C080009D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D928ED42-0208-4F0D-9395-D8C080009D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9426C418-81F8-4B8B-BBB3-2323C4EDD7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9426C418-81F8-4B8B-BBB3-2323C4EDD7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9426C418-81F8-4B8B-BBB3-2323C4EDD7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9426C418-81F8-4B8B-BBB3-2323C4EDD7F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFCD5107-BA8D-461B-B81C-C100D31BD8AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFCD5107-BA8D-461B-B81C-C100D31BD8AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFCD5107-BA8D-461B-B81C-C100D31BD8AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFCD5107-BA8D-461B-B81C-C100D31BD8AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

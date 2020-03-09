@@ -2,6 +2,8 @@
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using System.Collections.Generic;
+using TracerLib;
 
 
 namespace WpfTestbench {
@@ -23,6 +25,12 @@ namespace WpfTestbench {
 
 
   /// <summary>
+  /// Class is used as dummy parameter by the XyzTraced constructors
+  /// </summary>
+  public class DummyTraceClass { }
+
+
+  /// <summary>
   /// Tracing of WPF property changes and WPF events
   /// </summary>
   public static class TraceWPFEvents {
@@ -35,34 +43,42 @@ namespace WpfTestbench {
     /// <summary>
     /// Trace creation start of traced object
     /// </summary>
-    public static string TraceCreateStart(string traceObjectName) {
-      return TraceCreateStart(traceObjectName, "");
-    }
-
-
-    /// <summary>
-    /// Trace creation start of traced object
-    /// </summary>
-    public static string TraceCreateStart(string traceObjectName, string argumentValue) {
+    public static DummyTraceClass TraceCreateStart(string traceObjectName, string argumentValue=null) {
       TraceWPFEvents.TraceStart(traceObjectName + ".create", argumentValue);
-      return traceObjectName;
+      return null;
     }
+
+
+    ///// <summary>
+    ///// Trace creation start of traced object
+    ///// </summary>
+    //public static string TraceCreateStartOld(string traceObjectName) {
+    //  return TraceCreateStart(traceObjectName, "");
+    //}
+
+
+    ///// <summary>
+    ///// Trace creation start of traced object
+    ///// </summary>
+    //public static string TraceCreateStart(string traceObjectName, string argumentValue) {
+    //  TraceWPFEvents.TraceStart(traceObjectName + ".create", argumentValue);
+    //  return traceObjectName;
+    //}
+
+
+    ///// <summary>
+    ///// Trace creation end of traced object
+    ///// </summary>
+    //public static string TraceCreateEnd(string traceObjectName) {
+    //  return TraceCreateEnd(traceObjectName, "");
+    //}
 
 
     /// <summary>
     /// Trace creation end of traced object
     /// </summary>
-    public static string TraceCreateEnd(string traceObjectName) {
-      return TraceCreateEnd(traceObjectName, "");
-    }
-
-
-    /// <summary>
-    /// Trace creation end of traced object
-    /// </summary>
-    public static string TraceCreateEnd(string traceObjectName, string argumentValue) {
+    public static void TraceCreateEnd(string traceObjectName, string argumentValue=null) {
       TraceWPFEvents.TraceEnd(traceObjectName+".create", argumentValue);
-      return traceObjectName;
     }
 
 
@@ -85,10 +101,48 @@ namespace WpfTestbench {
         e.Property!=FrameworkElement.IsMouseOverProperty && 
         e.Property!=UIElement.IsMouseDirectlyOverProperty)//
       {
-        traceProperty(GetFrameWorkElementName(frameworkElement)!, e);
+        TraceProperty(GetFrameWorkElementName(frameworkElement), e);
       }
       baseMethod(e);
     }
+
+
+    static List<FrameworkElement> arrangeExceptionList = new List<FrameworkElement>();
+
+
+    /// <summary>
+    /// Trace Arrange
+    /// </summary>
+    public static Size ArrangeOverride(
+      FrameworkElement frameworkElement,
+      Size finalSize,
+      Func<Size, Size> baseMethod) //
+    {
+      if (isExceptionProcessing) return finalSize;
+
+      if (!IsTracingOn) return baseMethod==null ? finalSize : baseMethod(finalSize);
+
+      string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Arrange";
+      TraceStart(baseMethodName, finalSize.ToString());
+      Size returnFinalSize = removeInfinity(finalSize);
+      if (baseMethod!=null) {
+        try {
+          returnFinalSize = baseMethod(finalSize);
+          arrangeExceptionList.Remove(frameworkElement);//does not throw an exception if list is empty
+        } catch (Exception ex) {
+          if (!arrangeExceptionList.Contains(frameworkElement)) {
+            //report the exception only once. Because of the exception reporting, WPF will call Arrange() again.
+            arrangeExceptionList.Add(frameworkElement);
+            Tracer.Exception(ex);
+          }
+        }
+      }
+      TraceEnd(baseMethodName, returnFinalSize.ToString());
+      return returnFinalSize;
+    }
+
+
+    static List<FrameworkElement> measureExceptionList = new List<FrameworkElement>();
 
 
     /// <summary>
@@ -105,43 +159,32 @@ namespace WpfTestbench {
 
       string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Measure";
       TraceStart(baseMethodName, constraint.ToString());
-      Size returnConstraint;
-      if (baseMethod==null) {
-        returnConstraint = constraint;
-      } else {
-        returnConstraint = baseMethod(constraint);
-      }
-      if (double.IsInfinity(returnConstraint.Height) || double.IsInfinity(returnConstraint.Width)){
-        //System.Diagnostics.Debugger.Break();
+      Size returnConstraint = removeInfinity(constraint);
+      if (baseMethod!=null) {
+        try {
+          returnConstraint = baseMethod(constraint);
+          measureExceptionList.Remove(frameworkElement);//does not throw an exception if list is empty
+        } catch (Exception ex) {
+          if (!measureExceptionList.Contains(frameworkElement)) {
+            //report the exception only once. Because of the exception reporting, WPF will call Measure() again.
+            measureExceptionList.Add(frameworkElement);
+            Tracer.Exception(ex);
+          }
+        }
       }
       TraceEnd(baseMethodName, returnConstraint.ToString());
       return returnConstraint;
     }
 
 
-    /// <summary>
-    /// Trace Arrange
-    /// </summary>
-    public static Size ArrangeOverride(
-      FrameworkElement frameworkElement, 
-      Size finalSize, 
-      Func<Size, Size> baseMethod) //
-    {
-      if (isExceptionProcessing) return finalSize;
-
-      if (!IsTracingOn) return baseMethod==null ? finalSize : baseMethod(finalSize);
-
-      string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Arrange";
-      TraceStart(baseMethodName, finalSize.ToString());
-      Size returnFinalSize;
-      if (baseMethod==null) {
-        returnFinalSize = finalSize;
-      } else {
-        returnFinalSize = baseMethod(finalSize);
-      }
-      TraceEnd(baseMethodName, returnFinalSize.ToString());
-      return returnFinalSize;
+    private static Size removeInfinity(Size constraint) {
+      return new Size(
+        double.IsInfinity(constraint.Width ) ? 0 : constraint.Width,
+        double.IsInfinity(constraint.Height) ? 0 : constraint.Height);
     }
+
+
+    static List<FrameworkElement> renderExceptionList = new List<FrameworkElement>(); 
 
 
     /// <summary>
@@ -160,8 +203,17 @@ namespace WpfTestbench {
       }
 
       string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Render";
-      TraceStart(baseMethodName, "");
-      baseMethod(drawingContext);
+      TraceStart(baseMethodName, frameworkElement.RenderSize.ToString());
+      try {
+        baseMethod(drawingContext);
+        renderExceptionList.Remove(frameworkElement);//does not throw an exception if list is empty
+      } catch (Exception ex) {
+        if (!renderExceptionList.Contains(frameworkElement)) {
+          //report the exception only once. Because of the exception reporting, WPF might call Render() again.
+          renderExceptionList.Add(frameworkElement);
+          Tracer.Exception(ex);
+        }
+      }
       TraceEnd(baseMethodName);
     }
 
@@ -169,10 +221,11 @@ namespace WpfTestbench {
     /// <summary>
     /// Returns frameworkElement Name, if one is defined. Otherwise uses the frameworkElement's type
     /// </summary>
-    public static string? GetFrameWorkElementName(FrameworkElement frameworkElement) {
+    public static string GetFrameWorkElementName(FrameworkElement frameworkElement) {
       if (!IsTracingOn) return null;
 
-      if (frameworkElement is ITraceName iTraceName  && iTraceName.TraceName!=null  && iTraceName.TraceName.Length>0) {
+      ITraceName iTraceName = frameworkElement as ITraceName;
+      if (iTraceName!=null  && iTraceName.TraceName!=null  && iTraceName.TraceName.Length>0) {
         return iTraceName.TraceName;
       }
 
@@ -187,12 +240,12 @@ namespace WpfTestbench {
     /// Returns ParentName + '_' + frameworkElement Name
     /// </summary>
     public static string GetParentFrameWorkElementName(FrameworkElement frameworkElement) {
-      if (!IsTracingOn) return "";
+      if (!IsTracingOn) return null;
 
       string fullName = "???";
       FrameworkElement predecessor = frameworkElement;
       while (predecessor.Parent!=null) {
-        predecessor = (FrameworkElement)predecessor.Parent;
+        predecessor = predecessor.Parent as FrameworkElement;
         if (predecessor.Name!=null && predecessor.Name.Length>0) {
           fullName = predecessor.Name;
           break;
@@ -210,8 +263,8 @@ namespace WpfTestbench {
     }
 
 
-    static readonly StringBuilder lineStringBuilder = new StringBuilder();
-    static int indentCount = 0;
+    private static StringBuilder lineStringBuilder = new StringBuilder();
+    private static int indentCount = 0;
 
 
     public static void ResetTrace() {
@@ -239,11 +292,12 @@ namespace WpfTestbench {
     /// <summary>
     /// Trace Property
     /// </summary>
-    private static void traceProperty(string objectName, DependencyPropertyChangedEventArgs e) {
+    private static void TraceProperty(string objectName, DependencyPropertyChangedEventArgs e) {
       if (!IsTracingOn) return;
 
       if (isFiltered(objectName, e.Property.Name)) return;
-
+////YLegend.MinValue=-200
+//if (objectName=="YLegend" && e.Property.Name=="MinValue" && e.NewValue!=null && e.NewValue.ToString()=="-200") System.Diagnostics.Debugger.Break();
       traceIndent();
       lineStringBuilder.Append(objectName);
       lineStringBuilder.Append(".");
@@ -258,7 +312,9 @@ namespace WpfTestbench {
     }
 
 
-    private static bool isFiltered(string? _/*objectName*/, string message) {
+    private static bool isFiltered(string objectName, string message) {
+      if (message==null) return false;
+
       return
         message.IndexOf("IsKeyboardFocusWithin", StringComparison.InvariantCultureIgnoreCase)>=0 ||
         message.IndexOf("IsMouseCaptureWithin", StringComparison.InvariantCultureIgnoreCase)>=0 ||
@@ -284,7 +340,7 @@ namespace WpfTestbench {
     }
 
 
-    static FrameworkElement? reportedLayoutFrameworkElement = null;
+    static FrameworkElement reportedLayoutFrameworkElement = null;
     static bool isKeepReportedLayoutFrameworkElement = false;
 
 
@@ -361,7 +417,7 @@ namespace WpfTestbench {
     /// <summary>
     /// Trace start of method call
     /// </summary>
-    public static void TraceStart(string baseMethodName, string argumentValue) {
+    public static void TraceStart(string baseMethodName, string argumentValue=null) {
       if (!IsTracingOn) return;
 
       if (isFiltered(baseMethodName, argumentValue)) return;
@@ -370,7 +426,9 @@ namespace WpfTestbench {
       indentCount++;
       lineStringBuilder.Append(baseMethodName);
       lineStringBuilder.Append("(");
-      lineStringBuilder.Append(argumentValue);
+      if (argumentValue!=null) {
+        lineStringBuilder.Append(argumentValue);
+      }
       lineStringBuilder.Append(")");
       commitTraceLine();
     }
@@ -379,40 +437,28 @@ namespace WpfTestbench {
     /// <summary>
     /// Trace end of method call
     /// </summary>
-    public static void TraceEnd(string baseMethodName) {
-      if (!IsTracingOn) return;
-
-      if (isFiltered(baseMethodName, baseMethodName)) return;
-
-      if (indentCount>0) {
-        indentCount--;
-      }
-      traceIndent();
-      lineStringBuilder.Append(baseMethodName);
-      lineStringBuilder.Append(" end");
-      commitTraceLine();
-    }
-
-
-    public static void TraceEnd(string baseMethodName, string argumentValue) {
+    public static void TraceEnd(string baseMethodName, string argumentValue=null) {
       if (!IsTracingOn) return;
 
       if (isFiltered(baseMethodName, argumentValue)) return;
 
-      //var isOutdent = false;
+      bool isEmptyLineNeeded = false;
       if (indentCount>0) {
-        //isOutdent = true;
         indentCount--;
+        if (indentCount==0) {
+          isEmptyLineNeeded = true;
+        }
       }
       traceIndent();
       lineStringBuilder.Append(baseMethodName);
-      lineStringBuilder.Append("(");
-      lineStringBuilder.Append(argumentValue);
-      string endString = ") end";
-      //////if (isOutdent && indentCount==0) {
-      //////  endString += Environment.NewLine;
-      //////}
-      lineStringBuilder.Append(endString);
+      if (argumentValue!=null) {
+        lineStringBuilder.Append("(");
+        lineStringBuilder.Append(argumentValue);
+      }
+      lineStringBuilder.Append(") end");
+      if (isEmptyLineNeeded) {
+        lineStringBuilder.Append(Environment.NewLine);
+      }
       commitTraceLine();
     }
 
