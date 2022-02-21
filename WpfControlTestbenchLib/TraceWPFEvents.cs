@@ -116,14 +116,14 @@ namespace WpfTestbench {
     public static Size ArrangeOverride(
       FrameworkElement frameworkElement,
       Size finalSize,
-      Func<Size, Size> baseMethod) //
+      Func<Size, Size>? baseMethod) //
     {
       if (isExceptionProcessing) return finalSize;
 
       if (!IsTracingOn) return baseMethod==null ? finalSize : baseMethod(finalSize);
 
       string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Arrange";
-      TraceStart(baseMethodName, finalSize.ToString());
+      TraceStart(baseMethodName, toString(finalSize));
       Size returnFinalSize = removeInfinity(finalSize);
       if (baseMethod!=null) {
         try {
@@ -137,8 +137,18 @@ namespace WpfTestbench {
           }
         }
       }
-      TraceEnd(baseMethodName, returnFinalSize.ToString());
+      TraceEnd(baseMethodName, toString(finalSize));
       return returnFinalSize;
+    }
+
+
+    private static string toString(Size size) {
+      return size.IsEmpty ? "IsEmpty" : $"{size.Width:N0}, {size.Height:N0}";
+    }
+
+
+    private static string? toString(Thickness thickness) {
+      return $"{thickness.Left:N0}, {thickness.Top:N0}, {thickness.Right:N0}, {thickness.Bottom:N0}";
     }
 
 
@@ -151,14 +161,14 @@ namespace WpfTestbench {
     public static Size MeasureOverride(
       FrameworkElement frameworkElement, 
       Size constraint, 
-      Func<Size, Size> baseMethod) //
+      Func<Size, Size>? baseMethod) //
     {
       if (isExceptionProcessing) return constraint;
 
       if (!IsTracingOn) return baseMethod==null ? constraint : baseMethod(constraint);
 
       string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Measure";
-      TraceStart(baseMethodName, constraint.ToString());
+      TraceStart(baseMethodName, toString(constraint));
       Size returnConstraint = removeInfinity(constraint);
       if (baseMethod!=null) {
         try {
@@ -172,7 +182,7 @@ namespace WpfTestbench {
           }
         }
       }
-      TraceEnd(baseMethodName, returnConstraint.ToString());
+      TraceEnd(baseMethodName, toString(returnConstraint));
       return returnConstraint;
     }
 
@@ -203,7 +213,7 @@ namespace WpfTestbench {
       }
 
       string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Render";
-      TraceStart(baseMethodName, frameworkElement.RenderSize.ToString());
+      TraceStart(baseMethodName, toString(frameworkElement.RenderSize));
       try {
         baseMethod(drawingContext);
         renderExceptionList.Remove(frameworkElement);//does not throw an exception if list is empty
@@ -305,6 +315,16 @@ namespace WpfTestbench {
       lineStringBuilder.Append("=");
       if (e.NewValue==null) {
         lineStringBuilder.Append("null");
+      } else if (e.NewValue is double doubleValue) {
+        if (Math.Abs(doubleValue)>100) {
+          lineStringBuilder.Append(doubleValue.ToString("N0"));
+        } else {
+          lineStringBuilder.Append(doubleValue.ToString("N2"));
+        }
+      } else if (e.NewValue is Size sizeValue) {
+        lineStringBuilder.Append(toString(sizeValue));
+      } else if (e.NewValue is Thickness thicknessValue) {
+        lineStringBuilder.Append(toString(thicknessValue));
       } else {
         lineStringBuilder.Append(e.NewValue.ToString());
       }

@@ -275,11 +275,11 @@ namespace WpfTestbench {
     void nextTestButton_Click(object sender, RoutedEventArgs e) {
       if (testAction!=null){
         //verify result of previous test
-        Exception exception = null;
+        //Exception exception = null;
         try {
           testAction();
         } catch (Exception ex) {
-//          exception = ex;
+          //          exception = ex;
           Tracer.Error("Test Error: " + ex.Message + Environment.NewLine + ex.ToDetailString());
         }
         //if (exception!=null) {

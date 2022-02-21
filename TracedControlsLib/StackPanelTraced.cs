@@ -24,7 +24,7 @@ namespace WpfTestbench {
 
 
   /// <summary>
-  /// Helper class to allow using Panel constructor with a parameter.
+  /// Helper class to allow using StackPanelTraced constructor with a parameter.
   /// </summary>
   public class StackPanelWithConstructor: StackPanel {
     public StackPanelWithConstructor(object _):base(){}
@@ -34,12 +34,16 @@ namespace WpfTestbench {
   /// <summary>
   /// StackPanel with event tracing for TestBench.
   /// </summary>
-  public class StackPanelTraced: StackPanelWithConstructor, ITraceName  {
+  public class StackPanelTraced: StackPanelWithConstructor, ITraceName {
+
+    #region Property
+    //      --------
 
     /// <summary>
     /// Name to be used for tracing
     /// </summary>
     public string TraceName { get; private set; }
+    #endregion
 
 
     #region Constructor
@@ -58,7 +62,6 @@ namespace WpfTestbench {
       TraceName = traceName;
       TraceWPFEvents.TraceCreateEnd(traceName);
     }
-
     #endregion
 
 

@@ -33,6 +33,7 @@ namespace WpfTestbench {
 
       TodoTexBox.Text =
         "Add file headers" + Environment.NewLine +
+        "Move DummyConverter to CustomControlBaseLib" + Environment.NewLine +
         "Can Generic.xaml be replaced" + Environment.NewLine +
         "Can TracedLib be replaced with reflection ? Probably not" + Environment.NewLine +
         @"Original code: D:\Visual Studio 2010\Projects\CodeProject\WpfControlTestbench\WpfControlTestbenchDev";
