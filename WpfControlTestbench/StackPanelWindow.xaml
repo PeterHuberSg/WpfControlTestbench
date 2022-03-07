@@ -7,7 +7,7 @@
         Title="StackPanel Testbench">
     <WpfControlTestbenchLib:WpfControlTestbench Name="TestBench">
       <WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>
-        <TracedControlsLib:StackPanelTraced Name="TestStackPanelTraced" Background="AliceBlue" Margin="10" />
+      <WpfControlTestbenchLib:StackPanelTraced Name="TestStackPanelTraced" Background="AliceBlue" Margin="10" />
       </WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>
       <Grid Margin="5,3,5,3">
         <Grid.RowDefinitions>

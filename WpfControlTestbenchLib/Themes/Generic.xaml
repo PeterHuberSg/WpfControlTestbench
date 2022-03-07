@@ -1,9 +1,15 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:WpfTestbench="clr-namespace:WpfTestbench"/>
+
+
+<!--<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WpfTestbench="clr-namespace:WpfTestbench">
 
-  <!--
+  --><!--
   +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+ Outer Grid
   |Child Content                     |
   +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
@@ -14,7 +20,7 @@
   |+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~+|
   +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
   
-  -->
+  --><!--
   <Style TargetType="{x:Type WpfTestbench:WpfControlTestbench}">
     <Setter Property="Template">
       <Setter.Value>
@@ -29,7 +35,7 @@
               </Grid.RowDefinitions>
 
               <ContentPresenter Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-              <WpfTestbench:ControlPropertyViewer Grid.Row="1" Grid.Column="0" x:Name="PART_ControlPropertyViewer" 
+              <WpfTestbench:StandardPropertyViewer Grid.Row="1" Grid.Column="0" x:Name="PART_StandardPropertyViewer" 
                                                   TestFrameworkElement="{TemplateBinding TestFrameworkElement}" />
               <GridSplitter Grid.Row="2" Grid.Column="0" Height="5" HorizontalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" >
                 <GridSplitter.Background>
@@ -40,8 +46,8 @@
                 </GridSplitter.Background>
               </GridSplitter>
 
-              <!--Test Control / Event Trace Grid-->
-              <!--===============================-->
+              --><!--Test Control / Event Trace Grid-->
+              <!--===============================--><!--
               <Grid Grid.Row="3" Grid.Column="0">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition/>
@@ -68,4 +74,4 @@
       </Setter.Value>
     </Setter>
   </Style>
-</ResourceDictionary>
+</ResourceDictionary>-->

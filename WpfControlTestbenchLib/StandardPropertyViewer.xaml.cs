@@ -1,7 +1,7 @@
 ﻿/**************************************************************************************
 
-WpfTestbench.ControlPropertyViewer
-==================================
+WpfTestbench.StandardPropertyViewer
+===================================
 
 Displays a property grid for a control (TestFrameworkElement) inheriting from FrameworkElement and possibly Control.
 
@@ -32,57 +32,108 @@ namespace WpfTestbench {
   /// <summary>
   /// Displays a property grid for a control (TestFrameworkElement) inheriting from FrameworkElement and possibly Control.
   /// </summary>
-  public partial class ControlPropertyViewer: UserControl {
+  public partial class StandardPropertyViewer: UserControl {
 
-    #region Properties
-    //      ----------
+    //#region Properties
+    ////      ----------
 
-    /// <summary>
-    /// FrameworkElement for which properties values like margin get displayed. If TestFrameworkElement inherits from a Control,
-    /// also font related properties get displayed.
-    /// </summary>
-    public FrameworkElement? TestFrameworkElement {
-      get { return (FrameworkElement?)GetValue(TestFrameworkElementProperty); }
-      set { SetValue(TestFrameworkElementProperty, value); }
-    }
+    ///// <summary>
+    ///// FrameworkElement for which properties values like margin get displayed. If TestFrameworkElement inherits from a Control,
+    ///// also font related properties get displayed.
+    ///// </summary>
+    //public FrameworkElement? TestFrameworkElement {
+    //  get { return (FrameworkElement?)GetValue(TestFrameworkElementProperty); }
+    //  set { SetValue(TestFrameworkElementProperty, value); }
+    //}
 
-    /// <summary>
-    /// Dependency Property definition for TestFrameworkElement
-    /// </summary>
-    public static readonly DependencyProperty TestFrameworkElementProperty = 
-    DependencyProperty.Register("TestFrameworkElement", typeof(FrameworkElement), typeof(ControlPropertyViewer), 
-      new UIPropertyMetadata(null, testFrameworkElement_Changed));
+    ///// <summary>
+    ///// Dependency Property definition for TestFrameworkElement
+    ///// </summary>
+    //public static readonly DependencyProperty TestFrameworkElementProperty = 
+    //DependencyProperty.Register("TestFrameworkElement", typeof(FrameworkElement), typeof(StandardPropertyViewer), 
+    //  new UIPropertyMetadata(null, testFrameworkElement_Changed));
 
 
-    private static void testFrameworkElement_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-      if (e.OldValue!=null) throw new NotSupportedException("It is not possible to initialise TestFrameworkElement twice.");
+    //private static void testFrameworkElement_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+    //  if (e.OldValue!=null) throw new NotSupportedException("It is not possible to initialise TestFrameworkElement twice.");
 
-      ControlPropertyViewer controlPropertyViewer = (ControlPropertyViewer)d;
-      //ControlPropertyViewer needs to add some Lines to the host container of TestFrameworkElement, which is supposed to be a Grid.
-      //When defined in XAML, the TestFrameworkElement property of ControlPropertyViewer gets set before TestFrameworkElement gets added
-      //to the grid. For this reason, we have to delay the setup(), if ControlPropertyViewer is not loaded yet.
-      if (controlPropertyViewer.IsLoaded) {
-        FrameworkElement testFrameworkElement = (FrameworkElement)e.NewValue;
-        controlPropertyViewer.setup(testFrameworkElement);
-      }
-    }
-    #endregion
+    //  StandardPropertyViewer standardPropertyViewer = (StandardPropertyViewer)d;
+    //  //StandardPropertyViewer needs to add some Lines to the host container of TestFrameworkElement, which is supposed to be a Grid.
+    //  //When defined in XAML, the TestFrameworkElement property of StandardPropertyViewer gets set before TestFrameworkElement gets added
+    //  //to the grid. For this reason, we have to delay the setup(), if StandardPropertyViewer is not loaded yet.
+    //  if (standardPropertyViewer.IsLoaded) {
+    //    FrameworkElement testFrameworkElement = (FrameworkElement)e.NewValue;
+    //    standardPropertyViewer.setup(testFrameworkElement);
+    //  }
+    //}
+    //#endregion
 
 
     #region Constructor
     //      -----------
 
+    readonly FrameworkElement testFrameworkElement; //the FrameworkElement getting tested
+    readonly Control? testControl; //gives access to TestFrameworkElement as a Control. This is needed for access to Fonts, Border, Padding, etc.
+    readonly Grid? hostGrid; //testFrameworkElement is supposed to be hosted in a grid
+    readonly int testFrameworkElementGridRow;
+    readonly int testFrameworkElementGirdColumn;
+
+
+    #pragma warning disable CS8618 // Non-nullable field testFrameworkElement, referenceLine and origineShadow are uninitialized. Consider declaring as nullable.
+    public StandardPropertyViewer(FrameworkElement testFrameworkElement, Grid hostGrid): this() {
+    #pragma warning restore CS8618
+      try { //improve how WPF handles exceptions in the constructor
+        this.testFrameworkElement = testFrameworkElement;
+        this.hostGrid = hostGrid;
+
+        testFrameworkElementGridRow = Grid.GetColumn(testFrameworkElement);
+        testFrameworkElementGirdColumn = Grid.GetRow(testFrameworkElement);
+        this.testFrameworkElement = testFrameworkElement;
+        testControl = testFrameworkElement as Control;
+
+        setupWidthHeightMarginBorderTextBoxes();
+        setupAlignment();
+
+        if (testControl==null) {
+          //TestFrameworkElement does not support Fonts and Padding. Hide them
+          ContentColumn.MaxWidth = 0;
+          BorderLeftColumn.MaxWidth = 0;
+          PaddingLeftColumn.MaxWidth = 0;
+          PaddingRightColumn.MaxWidth = 0;
+          BorderRightColumn.MaxWidth = 0;
+          ColorEmptyColumn.MaxWidth = 0;
+          ColorColumn.MaxWidth = 0;
+          FontColumn.MaxWidth = 0;
+          FontSizeColumn.MaxWidth = 0;
+          FontWeightColumn.MaxWidth = 0;
+          TemplateButton.IsEnabled = false;
+          TextBlock textBlock = new() {
+            Text =  "Template can only be displayed for FrameworkElement inheriting from Control"
+          };
+          TemplateButton.ToolTip = textBlock;
+        } else {
+          //TestFrameworkElement does support Fonts, Border and Padding. Show them
+          setupFontComboBoxes();
+        }
+
+        testFrameworkElement.LayoutUpdated += testFrameworkElement_LayoutUpdated;
+
+      } catch (Exception ex) {
+        TracerLib.Tracer.Exception(ex, "");
+        throw;
+      }
+    }
+
+
     /// <summary>
     /// Default constructor
     /// </summary>
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-    public ControlPropertyViewer() {
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+    #pragma warning disable CS8618 // Non-nullable field testFrameworkElement and origineShadow are uninitialized. Consider declaring as nullable.
+    public StandardPropertyViewer() {
+    #pragma warning restore CS8618
       InitializeComponent();
 
-      Loaded += controlPropertyViewer_Loaded;
       GridLinesCheckBox.Click += gridLinesCheckBox_Click;
-      NextTestButton.Click += nextTestButton_Click;
       TemplateButton.Click += templateButton_Click;
       DebugButton.Click += debugButton_Click;
       BreakOnExceptionCheckBox.IsChecked = TracerLib.Tracer.IsBreakOnException;
@@ -91,35 +142,20 @@ namespace WpfTestbench {
 
       FontSize = 11;
     }
-
-
-    void gridLinesCheckBox_Click(object sender, RoutedEventArgs e) {
-      foreach (var item in hostGrid!.Children) {
-        if (item is Line line) {
-          if (GridLinesCheckBox.IsChecked!.Value) {
-            line.Visibility = System.Windows.Visibility.Visible;
-          } else {
-            line.Visibility = System.Windows.Visibility.Hidden;
-          }
-        }
-      }
-    }
-
-
-    void nextTestButton_Click(object sender, RoutedEventArgs e) {
-    }
-
-    
-    void controlPropertyViewer_Loaded(object sender, RoutedEventArgs e) {
-      if (TestFrameworkElement!=null) {
-        setup(TestFrameworkElement);
-      }
-    }
     #endregion
 
 
     #region General Events
     //      --------------
+
+    void gridLinesCheckBox_Click(object sender, RoutedEventArgs e) {
+      foreach (var item in hostGrid!.Children) {
+        if (item is Line line) {
+          line.Visibility =GridLinesCheckBox.IsChecked!.Value ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
+        }
+      }
+    }
+
 
     private void breakOnExceptionCheckBox_Checked(object sender, RoutedEventArgs e) {
       TracerLib.Tracer.IsBreakOnException = BreakOnExceptionCheckBox.IsChecked!.Value;
@@ -149,87 +185,6 @@ namespace WpfTestbench {
     void debugButton_Click(object sender, RoutedEventArgs e) {
       System.Diagnostics.Debugger.Break();
     }
-    #endregion
-
-
-    #region Setup TestFrameworkElement
-    //      --------------------------
-
-    FrameworkElement testFrameworkElement; //the FrameworkElement getting tested
-    Control? testControl; //gives access to TestFrameworkElement as a Control. This is needed for access to Fonts, Border, Padding, etc.
-    Grid? hostGrid; //testFrameworkElement is supposed to be hosted in a grid
-    int testFrameworkElementGridRow;
-    int testFrameworkElementGirdColumn;
-
-    //referenceLine is in the same grid cell like testFrameworkElement. It is used to get the cell related transformation 
-    //to testFrameworkElement, which then is used to calculate the position of the axis.
-    Line referenceLine;
-
-
-    private void setup(FrameworkElement testFrameworkElement){
-      try { //improve how WPF handles exceptions in the constructor
-        DependencyObject vparent = VisualTreeHelper.GetParent(testFrameworkElement);
-        DependencyObject vgparent = VisualTreeHelper.GetParent(vparent);
-        hostGrid = vgparent as Grid;
-        if (hostGrid==null) {
-          throw new NotSupportedException("TestFrameworkElement must be placed directly in a Grid.");
-        }
-        testFrameworkElementGridRow = Grid.GetColumn(testFrameworkElement);
-        testFrameworkElementGirdColumn = Grid.GetRow(testFrameworkElement);
-        this.testFrameworkElement = testFrameworkElement;
-        testControl = testFrameworkElement as Control;
-
-        setupTextBoxes();
-        setupAlignment();
-        createOrigineShadow();
-
-        referenceLine = new Line();
-        hostGrid.Children.Add(referenceLine);
-        Grid.SetRow(referenceLine, testFrameworkElementGridRow);
-        Grid.SetColumn(referenceLine, testFrameworkElementGirdColumn);
-
-        createMarginAxisLines();
-
-        if (testControl==null) {
-          //TestFrameworkElement does not support Fonts and Padding. Hide them
-          ContentColumn.MaxWidth = 0;
-          BorderLeftColumn.MaxWidth = 0;
-          PaddingLeftColumn.MaxWidth = 0;
-          PaddingRightColumn.MaxWidth = 0;
-          BorderRightColumn.MaxWidth = 0;
-          ColorEmptyColumn.MaxWidth = 0;
-          ColorColumn.MaxWidth = 0;
-          FontColumn.MaxWidth = 0;
-          FontSizeColumn.MaxWidth = 0;
-          FontWeightColumn.MaxWidth = 0;
-          TemplateButton.IsEnabled = false;
-          TextBlock textBlock = new TextBlock {
-            Text =  "Template can only be displayed for FrameworkElement inheriting from Control"
-          };
-          TemplateButton.ToolTip = textBlock;
-        } else {
-          //TestFrameworkElement does support Fonts, Border and Padding. Show them
-          createBorderPaddingAxisLines();
-          setupFontComboBoxes();
-        }
-
-        testFrameworkElement.SizeChanged += testFrameworkElement_SizeChanged;
-        testFrameworkElement.LayoutUpdated += testFrameworkElement_LayoutUpdated;
-
-      } catch (Exception ex) {
-        TracerLib.Tracer.Exception(ex, "");
-
-        throw;
-      }
-    }
-
-
-    void testFrameworkElement_SizeChanged(object sender, SizeChangedEventArgs e) {
-      updateOrigineShadowPosition();
-    }
-
-
-    const double strokeThickness = 4; //thickness of lines displayed to the user, who can change their position with the mouse.
 
 
     void testFrameworkElement_LayoutUpdated(object? sender, EventArgs e) {
@@ -237,16 +192,14 @@ namespace WpfTestbench {
       DesiredWidthTextBox.Text = testFrameworkElement.DesiredSize.Width.ToString(".0");
       RenderHeightTextBox.Text = testFrameworkElement.RenderSize.Height.ToString(".0");
       RenderWidthTextBox.Text = testFrameworkElement.RenderSize.Width.ToString(".0");
-
-      updateAxisPositions();
     }
     #endregion
 
 
-    #region TextBox
-    //      -------
+    #region Width Height TextBoxes
+    //      ----------------------
 
-    private void setupTextBoxes() {
+    private void setupWidthHeightMarginBorderTextBoxes() {
       //adds behavior that when user clicks on TextBox, all text gets selected first
       setupTextBox(HeightTextBox);
       setupTextBox(MinHeightTextBox);
@@ -258,11 +211,9 @@ namespace WpfTestbench {
       WpfBinding.Setup(testFrameworkElement, "Height", HeightTextBox, TextBox.TextProperty, BindingMode.TwoWay, new DoubleNanConverter());
       WpfBinding.Setup(testFrameworkElement, "MinHeight", MinHeightTextBox, TextBox.TextProperty, BindingMode.TwoWay, new DoublePositiveConverter());
       WpfBinding.Setup(testFrameworkElement, "MaxHeight", MaxHeightTextBox, TextBox.TextProperty, BindingMode.TwoWay, new DoublePositiveConverter());
-      WpfBinding.Setup(testFrameworkElement, "ActualHeight", ActualHeightTextBox, TextBox.TextProperty, BindingMode.OneWay, null, ".0");
       WpfBinding.Setup(testFrameworkElement, "Width", WidthTextBox, TextBox.TextProperty, BindingMode.TwoWay, new DoubleNanConverter());
       WpfBinding.Setup(testFrameworkElement, "MinWidth", MinWidthTextBox, TextBox.TextProperty, BindingMode.TwoWay, new DoublePositiveConverter());
       WpfBinding.Setup(testFrameworkElement, "MaxWidth", MaxWidthTextBox, TextBox.TextProperty, BindingMode.TwoWay, new DoublePositiveConverter());
-      WpfBinding.Setup(testFrameworkElement, "ActualWidth", ActualWidthTextBox, TextBox.TextProperty, BindingMode.OneWay, null, ".0");
 
       setupMarginTextBoxes();
       if (testControl!=null) {
@@ -377,8 +328,6 @@ namespace WpfTestbench {
 
     void testFrameworkElement_HorizontalAlignmentChanged(object? sender, EventArgs args) {
       HorizontalAlignmentComboBox.SelectedIndex = (int)testFrameworkElement.HorizontalAlignment;
-
-      updateOrigineShadowPosition();
     }
 
 
@@ -389,9 +338,6 @@ namespace WpfTestbench {
 
     void testFrameworkElement_VerticalAlignmentChanged(object? sender, EventArgs args) {
       VerticalAlignmentComboBox.SelectedIndex = (int)testFrameworkElement.VerticalAlignment;
-
-//      applyChangeToVerticalLines();
-      updateOrigineShadowPosition();
     }
 
 
@@ -444,10 +390,10 @@ namespace WpfTestbench {
 
 
     private void updateMarginTextBoxes() {
-      MarginLeftTextBox.Text = testFrameworkElement.Margin.Left.ToString();
-      MarginTopTextBox.Text = testFrameworkElement.Margin.Top.ToString();
-      MarginRightTextBox.Text = testFrameworkElement.Margin.Right.ToString();
-      MarginBottomTextBox.Text = testFrameworkElement.Margin.Bottom.ToString();
+      MarginLeftTextBox.Text = testFrameworkElement.Margin.Left.ToString(".0");
+      MarginTopTextBox.Text = testFrameworkElement.Margin.Top.ToString(".0");
+      MarginRightTextBox.Text = testFrameworkElement.Margin.Right.ToString(".0");
+      MarginBottomTextBox.Text = testFrameworkElement.Margin.Bottom.ToString(".0");
     }
 
 
@@ -521,10 +467,10 @@ namespace WpfTestbench {
 
 
     private void updateBorderTextBoxes() {
-      BorderLeftTextBox.Text = testControl!.BorderThickness.Left.ToString();
-      BorderTopTextBox.Text = testControl.BorderThickness.Top.ToString();
-      BorderRightTextBox.Text = testControl.BorderThickness.Right.ToString();
-      BorderBottomTextBox.Text = testControl.BorderThickness.Bottom.ToString();
+      BorderLeftTextBox.Text = testControl!.BorderThickness.Left.ToString(".0");
+      BorderTopTextBox.Text = testControl.BorderThickness.Top.ToString(".0");
+      BorderRightTextBox.Text = testControl.BorderThickness.Right.ToString(".0");
+      BorderBottomTextBox.Text = testControl.BorderThickness.Bottom.ToString(".0");
     }
 
 
@@ -534,10 +480,10 @@ namespace WpfTestbench {
 
 
     private void updatePaddingTextBoxes() {
-      PaddingLeftTextBox.Text = testControl!.Padding.Left.ToString();
-      PaddingTopTextBox.Text = testControl.Padding.Top.ToString();
-      PaddingRightTextBox.Text = testControl.Padding.Right.ToString();
-      PaddingBottomTextBox.Text = testControl.Padding.Bottom.ToString();
+      PaddingLeftTextBox.Text = testControl!.Padding.Left.ToString(".0");
+      PaddingTopTextBox.Text = testControl.Padding.Top.ToString(".0");
+      PaddingRightTextBox.Text = testControl.Padding.Right.ToString(".0");
+      PaddingBottomTextBox.Text = testControl.Padding.Bottom.ToString(".0");
     }
 
 
@@ -708,154 +654,6 @@ namespace WpfTestbench {
       WpfBinding.Setup(BackgroundColorComboBox, "SelectedColorBrush", testFrameworkElement, Control.BackgroundProperty, BindingMode.TwoWay);
       BorderColorComboBox.SetSelectedBrush(testControl.BorderBrush);
       WpfBinding.Setup(BorderColorComboBox, "SelectedColorBrush", testFrameworkElement, Control.BorderBrushProperty, BindingMode.TwoWay);
-    }
-    #endregion
-
-
-    #region Axis Lines
-    //      ----------
-
-    readonly AxisLine[/*type*/,/*dimension*/,/*order*/] axisLines = new AxisLine[3, 2, 2];
-
-
-    private void createMarginAxisLines(){
-      createAxisLine(LineTypeEnum.margin, DimensionEnum.width, LineOrderEnum.first, Colors.Blue, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.margin, DimensionEnum.width, LineOrderEnum.second, Colors.Green, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.margin, DimensionEnum.height, LineOrderEnum.first, Colors.Blue, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.margin, DimensionEnum.height, LineOrderEnum.second, Colors.Green, strokeThickness, testFrameworkElement);
-    }
-
-
-    private void createBorderPaddingAxisLines(){
-      createAxisLine(LineTypeEnum.border, DimensionEnum.width, LineOrderEnum.first, Colors.Red, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.border, DimensionEnum.width, LineOrderEnum.second, Colors.Orange, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.border, DimensionEnum.height, LineOrderEnum.first, Colors.Red, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.border, DimensionEnum.height, LineOrderEnum.second, Colors.Orange, strokeThickness, testFrameworkElement);
-
-      createAxisLine(LineTypeEnum.padding, DimensionEnum.width, LineOrderEnum.first, Colors.LightGray, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.padding, DimensionEnum.width, LineOrderEnum.second, Colors.Gray, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.padding, DimensionEnum.height, LineOrderEnum.first, Colors.LightGray, strokeThickness, testFrameworkElement);
-      createAxisLine(LineTypeEnum.padding, DimensionEnum.height, LineOrderEnum.second, Colors.Gray, strokeThickness, testFrameworkElement);
-    }
-
-
-    private void createAxisLine(LineTypeEnum lineType, DimensionEnum dimension, LineOrderEnum lineOrder, Color color, double strokeThickness, FrameworkElement testFrameworkElement) {
-      axisLines[(int)lineType, (int)dimension, (int)lineOrder] = new AxisLine(lineType, dimension, lineOrder, color, strokeThickness, testFrameworkElement);
-    }
-
-
-    Point offsetPointUsed = new Point(double.NaN, double.NaN);
-    Size renderSizeUsed = new Size(double.NaN, double.NaN);
-    Thickness marginUsed;
-    Thickness borderUsed;
-    Thickness paddingUsed;
-
-
-    private void updateAxisPositions() {
-      bool hasHeightChanged = false;
-      bool hasWidthChanged = false;
-
-      GeneralTransform generalTransform1 = testFrameworkElement.TransformToVisual(referenceLine);
-      Point newOffsetPoint = generalTransform1.Transform(new Point(0, 0));
-
-      if (offsetPointUsed!=newOffsetPoint) {
-        hasHeightChanged |= (offsetPointUsed.Y!=newOffsetPoint.Y);
-        hasWidthChanged |= (offsetPointUsed.X!=newOffsetPoint.X);
-        offsetPointUsed = newOffsetPoint;
-      }
-
-      if (renderSizeUsed!=testFrameworkElement.RenderSize) {
-        hasHeightChanged |= (renderSizeUsed.Height!=testFrameworkElement.RenderSize.Height);
-        hasWidthChanged |= (renderSizeUsed.Width!=testFrameworkElement.RenderSize.Width);
-        renderSizeUsed = testFrameworkElement.RenderSize;
-      }
-
-      updateThickness(ref marginUsed, testFrameworkElement.Margin, ref hasHeightChanged, ref hasWidthChanged);
-
-      if (testControl!=null) {
-        updateThickness(ref borderUsed, testControl.BorderThickness, ref hasHeightChanged, ref hasWidthChanged);
-        updateThickness(ref paddingUsed, testControl.Padding, ref hasHeightChanged, ref hasWidthChanged);
-      }
-
-
-      if (!hasHeightChanged&&!hasWidthChanged) return;
-
-      //if (testControl==null) {
-      //  if (hasHeightChanged) {
-      //    TracerLib.Tracer.TraceLineFiltered("Height:{0}, Alignment:{1}, Margin:{2}, {3} Offset:{4}, AHeight: {5}", 
-      //      testFrameworkElement.Height, testFrameworkElement.VerticalAlignment, testFrameworkElement.Margin.Top, testFrameworkElement.Margin.Bottom, 
-      //      offsetPointUsed.Y, testFrameworkElement.ActualHeight);
-      //  }
-      //  if (hasWidthChanged) {
-      //    TracerLib.Tracer.TraceLineFiltered("Width:{0}, Alignment:{1}, Margin:{2}, {3} Offset:{4}, AWidth: {5}", 
-      //      testFrameworkElement.Width, testFrameworkElement.HorizontalAlignment, testFrameworkElement.Margin.Left, testFrameworkElement.Margin.Right, 
-      //      offsetPointUsed.X, testFrameworkElement.ActualWidth);
-      //  }
-      //} else {
-      //  if (hasHeightChanged) {
-      //    TracerLib.Tracer.TraceLineFiltered("Height:{0}, Alignment:{1}, Margin:{2}, {3} Offset:{4}, AHeight: {5}", 
-      //      testFrameworkElement.Height, testFrameworkElement.VerticalAlignment, testFrameworkElement.Margin.Top, testFrameworkElement.Margin.Bottom, 
-      //      offsetPointUsed.Y, testFrameworkElement.ActualHeight);
-      //  }
-      //  if (hasWidthChanged) {
-      //    TracerLib.Tracer.TraceLineFiltered("Width:{0}, Alignment:{1}, Margin:{2}, {3} Offset:{4}, AWidth: {5}", 
-      //      testFrameworkElement.Width, testFrameworkElement.HorizontalAlignment, testFrameworkElement.Margin.Left, testFrameworkElement.Margin.Right, 
-      //      offsetPointUsed.X, testFrameworkElement.ActualWidth);
-      //  }
-      //}
-
-      foreach (AxisLine axisLine in axisLines) {
-        if (axisLine!=null) {
-          if ((axisLine.Dimension==DimensionEnum.width && hasWidthChanged) || 
-            (/*axisLine.Dimension==DimensionEnum.height && */ hasHeightChanged))
-          axisLine.UpdateLinePosition(offsetPointUsed);
-        }
-      }
-    }
-
-
-    private void updateThickness(ref Thickness thickness, Thickness newThickness, ref bool isHorizontalChange, ref bool isVerticalChange) {
-      if (thickness==newThickness) return;
-
-      isHorizontalChange = isHorizontalChange | (thickness.Top!=newThickness.Top) | (thickness.Bottom!=newThickness.Bottom);
-      isVerticalChange = isVerticalChange | (thickness.Left!=newThickness.Left) | (thickness.Right!=newThickness.Right);
-      thickness = newThickness;
-      return;
-    }
-    #endregion
-    
-
-    #region Shadow of original position
-    //      ---------------------------
-
-    Rectangle origineShadow;
-
-
-    private void createOrigineShadow() {
-      origineShadow = new Rectangle {
-        Fill = new SolidColorBrush(Color.FromArgb(0x80, 0xA0, 0xA0, 0xA0))
-      };
-      origineShadow.Fill.Freeze();
-      hostGrid!.Children.Add(origineShadow);
-      Grid.SetRow(origineShadow, testFrameworkElementGridRow);
-      Grid.SetColumn(origineShadow, testFrameworkElementGirdColumn);
-      Grid.SetZIndex(origineShadow, Grid.GetZIndex(testFrameworkElement) - 1);
-    }
-
-
-    private void updateOrigineShadowPosition() {
-      origineShadow.HorizontalAlignment = testFrameworkElement.HorizontalAlignment;
-      if (origineShadow.HorizontalAlignment==HorizontalAlignment.Stretch && double.IsNaN(testFrameworkElement.Width)) {
-        origineShadow.Width = double.NaN;
-      } else {
-        origineShadow.Width = Math.Max(strokeThickness, testFrameworkElement.ActualWidth);
-      }
-      origineShadow.VerticalAlignment = testFrameworkElement.VerticalAlignment;
-      if (origineShadow.VerticalAlignment==VerticalAlignment.Stretch && double.IsNaN(testFrameworkElement.Height)) {
-        origineShadow.Height = double.NaN;
-      } else {
-        origineShadow.Height = Math.Max(strokeThickness, testFrameworkElement.ActualHeight);
-      }
     }
     #endregion
 

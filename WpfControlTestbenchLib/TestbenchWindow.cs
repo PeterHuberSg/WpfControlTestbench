@@ -112,7 +112,7 @@ namespace WpfTestbench {
         }
       }
 
-      var controlPropertyViewer = wpfControlTestbench.Template.FindName("PART_ControlPropertyViewer", wpfControlTestbench) as ControlPropertyViewer;
+      var controlPropertyViewer = wpfControlTestbench.Template.FindName("PART_StandardPropertyViewer", wpfControlTestbench) as StandardPropertyViewer;
       nextTestButton = controlPropertyViewer!.NextTestButton;
       if (testFuncs==null) {
         nextTestButton.IsEnabled = false;

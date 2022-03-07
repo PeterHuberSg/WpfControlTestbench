@@ -15,50 +15,50 @@ namespace WpfTestbench {
 
   public class WpfTraceViewer: DockPanel {
 
-    public const int MaxLinesStored = 400;
-
+    #region Properties
+    //      ----------
 
     /// <summary>
     /// A filter function returning true prevents the message to be traced
     /// </summary>
-    public Func<TraceMessage, bool> FilterFunc;
+    public Func<TraceMessage, bool>? FilterFunc;
+    #endregion
 
 
     #region Constructor
     //      -----------
 
-    static List<TraceMessage> staticTtraceMessages;
-    static Action<IEnumerable<TraceMessage>> traceAction;
+    static readonly List<TraceMessage> staticTraceMessages;
+    static Action<IEnumerable<TraceMessage>>? traceAction;
 
 
     static void setTraceAction(Action<IEnumerable<TraceMessage>> traceAction) {
       WpfTraceViewer.traceAction = traceAction;
-      if (staticTtraceMessages.Count>0){
+      if (staticTraceMessages.Count>0){
         //display previously received messages
-        traceAction(staticTtraceMessages);
-        staticTtraceMessages.Clear();
+        traceAction(staticTraceMessages);
+        staticTraceMessages.Clear();
       }
     }
 
 
     static WpfTraceViewer() {
-      staticTtraceMessages = new List<TraceMessage>();
+      staticTraceMessages = new List<TraceMessage>();
       foreach (TraceMessage traceMessage in Tracer.GetTrace()) {
-        staticTtraceMessages.Add(traceMessage);
+        staticTraceMessages.Add(traceMessage);
       }
       Tracer.MessagesTraced += Tracer_MessagesTraced;
     }
 
-
-    DockPanel buttonDockPanel;
-    TextBox traceTextBox;
-    RichTextBox traceRichTextBox;
-    TableRowGroup traceTableRowGroup;
+    readonly DockPanel buttonDockPanel;
+    readonly TextBox traceTextBox;
+    readonly RichTextBox traceRichTextBox;
+    readonly TableRowGroup traceTableRowGroup;
    
 
     string traceString;
     DateTime traceDateTime;
-    static string[] lineSeparator = new string[] { Environment.NewLine };
+    static readonly string[] lineSeparator = new string[] { Environment.NewLine };
 
 
     private void initTraceTextBox() {
@@ -69,94 +69,101 @@ namespace WpfTestbench {
       traceDateTime = DateTime.MaxValue; //This prevents that right at the beginning an empty line gets added
     }
 
-
-    CheckBox isRichTextTracingCheckBox;
-    CheckBox isFilterCheckBox;
+    readonly CheckBox isRichTextTracingCheckBox;
+    readonly CheckBox isFilterCheckBox;
 
 
     public WpfTraceViewer() {
-      buttonDockPanel = new DockPanel();
-      buttonDockPanel.Margin = new Thickness(5, 3, 0, 3);
+      buttonDockPanel = new DockPanel {Margin = new Thickness(5, 3, 0, 3)};
       DockPanel.SetDock(buttonDockPanel, Dock.Bottom);
       Children.Add(buttonDockPanel);
 
-      isRichTextTracingCheckBox = new CheckBox();
-      isRichTextTracingCheckBox.Content = "_Rich Text";
-      isRichTextTracingCheckBox.Margin = new Thickness(0, 0, 5, 0);
-      isRichTextTracingCheckBox.VerticalAlignment = VerticalAlignment.Center;
+      isRichTextTracingCheckBox = new CheckBox {
+        Content = "_Rich Text",
+        Margin = new Thickness(0, 0, 5, 0),
+        VerticalAlignment = VerticalAlignment.Center
+      };
       isRichTextTracingCheckBox.Checked += isRichTextTracingCheckBox_CheckedChanged;
       isRichTextTracingCheckBox.Unchecked += isRichTextTracingCheckBox_CheckedChanged;
       DockPanel.SetDock(isRichTextTracingCheckBox, Dock.Left);
       buttonDockPanel.Children.Add(isRichTextTracingCheckBox);
 
-      isFilterCheckBox = new CheckBox();
-      isFilterCheckBox.Content = "_Filter";
-      isFilterCheckBox.Margin = new Thickness(0, 0, 5, 0);
-      isFilterCheckBox.VerticalAlignment = VerticalAlignment.Center;
+      isFilterCheckBox = new CheckBox {
+        Content = "_Filter",
+        Margin = new Thickness(0, 0, 5, 0),
+        VerticalAlignment = VerticalAlignment.Center
+      };
       //isFilterCheckBox.Checked += isFilterCheckBox_CheckedChanged;
       //isFilterCheckBox.Unchecked += isFilterCheckBox_CheckedChanged;
       DockPanel.SetDock(isFilterCheckBox, Dock.Left);
       buttonDockPanel.Children.Add(isFilterCheckBox);
 
-      var copyAllButton = new Button();
-      copyAllButton.Content = "C_opy All";
-      copyAllButton.Margin = new Thickness(0, 0, 5, 0);
+      var copyAllButton = new Button {
+        Content = "C_opy All",
+        Margin = new Thickness(0, 0, 5, 0)
+      };
       copyAllButton.Click += copyAllButton_Click;
       DockPanel.SetDock(copyAllButton, Dock.Left);
       buttonDockPanel.Children.Add(copyAllButton);
 
-      var clearAllButton = new Button();
-      clearAllButton.Content = "_Clear All";
-      clearAllButton.Margin = new Thickness(0, 0, 5, 0);
+      var clearAllButton = new Button {
+        Content = "_Clear All",
+        Margin = new Thickness(0, 0, 5, 0)
+      };
       clearAllButton.Click += clearAllButton_Click;
       DockPanel.SetDock(clearAllButton, Dock.Left);
       buttonDockPanel.Children.Add(clearAllButton);
 
-      var stopContinueButton = new Button();
-      stopContinueButton.Content = "Stop";
-      stopContinueButton.Margin = new Thickness(0, 0, 5, 0);
+      var stopContinueButton = new Button {
+        Content = "Stop",
+        Margin = new Thickness(0, 0, 5, 0)
+      };
       stopContinueButton.Click += stopContinueButton_Click;
       DockPanel.SetDock(stopContinueButton, Dock.Left);
       buttonDockPanel.Children.Add(stopContinueButton);
 
-      var dockFillRectangle = new Rectangle();
-      dockFillRectangle.HorizontalAlignment = HorizontalAlignment.Stretch;
+      var dockFillRectangle = new Rectangle {
+        HorizontalAlignment = HorizontalAlignment.Stretch
+      };
       buttonDockPanel.Children.Add(dockFillRectangle);
 
       var tracerGrid = new Grid();
       Children.Add(tracerGrid);
 
 
-      traceTextBox = new TextBox();
-      traceTextBox.BorderBrush= Brushes.DarkGray;
-      traceTextBox.IsReadOnly = true;
-      traceTextBox.UndoLimit = 0;
-      traceTextBox.TextWrapping = TextWrapping.Wrap;
-      traceTextBox.Margin = new Thickness(3);
-      traceTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
-      traceTextBox.VerticalAlignment = VerticalAlignment.Stretch;
-      traceTextBox.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-      traceTextBox.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+      traceTextBox = new TextBox {
+        BorderBrush= Brushes.DarkGray,
+        IsReadOnly = true,
+        UndoLimit = 0,
+        TextWrapping = TextWrapping.Wrap,
+        Margin = new Thickness(3),
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        VerticalAlignment = VerticalAlignment.Stretch,
+        VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+        HorizontalScrollBarVisibility = ScrollBarVisibility.Visible
+      };
 
-      traceRichTextBox = new RichTextBox();
-      traceRichTextBox.BorderBrush= Brushes.DarkGray;
-      traceRichTextBox.IsReadOnly = true;
-      traceRichTextBox.UndoLimit = 0;
-      traceRichTextBox.Margin = new Thickness(3);
-      traceRichTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
-      traceRichTextBox.VerticalAlignment = VerticalAlignment.Stretch;
-      traceRichTextBox.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-      traceRichTextBox.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-      FlowDocument traceFlowDocument = new FlowDocument();
+      traceRichTextBox = new RichTextBox {
+        BorderBrush= Brushes.DarkGray,
+        IsReadOnly = true,
+        UndoLimit = 0,
+        Margin = new Thickness(3),
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        VerticalAlignment = VerticalAlignment.Stretch,
+        VerticalScrollBarVisibility = ScrollBarVisibility.Visible,
+        HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+      };
+      var traceFlowDocument = new FlowDocument();
       traceRichTextBox.Document = traceFlowDocument;
-      Table table = new Table();
+      var table = new Table();
       traceFlowDocument.Blocks.Add(table);
-      Typeface typeface = 
+      var typeface = 
         new Typeface(traceRichTextBox.FontFamily, traceRichTextBox.FontStyle, traceRichTextBox.FontWeight, traceRichTextBox.FontStretch);
+      var pixelsPerDip = (float)VisualTreeHelper.GetDpi(this).PixelsPerDip; 
       var dateFormattedText = 
-        new FormattedText("00:00.000", CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, traceRichTextBox.FontSize, Brushes.Black);
+        new FormattedText("00:00.000", CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, traceRichTextBox.FontSize, Brushes.Black, pixelsPerDip);
       var typeFormattedText = 
-        new FormattedText("nnn", CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, traceRichTextBox.FontSize, Brushes.Black);
+        new FormattedText("nnn", CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, traceRichTextBox.FontSize, Brushes.Black, pixelsPerDip);
       table.Columns.Add(new TableColumn {Width=new GridLength(dateFormattedText.Width, GridUnitType.Pixel)});
       table.Columns.Add(new TableColumn {Width=new GridLength(typeFormattedText.Width, GridUnitType.Pixel)});
       table.Columns.Add(new TableColumn{Width=GridLength.Auto});
@@ -186,7 +193,7 @@ namespace WpfTestbench {
     }
 
 
-    void parentWindow_Activated(object sender, EventArgs e) {
+    void parentWindow_Activated(object? sender, EventArgs e) {
       setTraceAction(addTraceLine);
     }
 
@@ -210,7 +217,7 @@ namespace WpfTestbench {
     static void Tracer_MessagesTracedOnWpfThread(TraceMessage[] traceMessages) {
       if (traceAction==null) {
         foreach (TraceMessage traceMessage in traceMessages) {
-          WpfTraceViewer.staticTtraceMessages.Add(traceMessage);
+          WpfTraceViewer.staticTraceMessages.Add(traceMessage);
         }
       }else{
         traceAction(traceMessages);
@@ -246,11 +253,7 @@ namespace WpfTestbench {
 
     void stopContinueButton_Click(object sender, RoutedEventArgs e) {
       Button stopContinueButton = (Button)sender;
-      if (isRunning) {
-        stopContinueButton.Content = "Continue";
-      } else {
-        stopContinueButton.Content = "Stop";
-      }
+      stopContinueButton.Content =isRunning ? "Continue" : "Stop";
       isRunning = !isRunning;
     }
     #endregion
@@ -260,7 +263,7 @@ namespace WpfTestbench {
     //      -------
 
     private void configureTextTracing() {
-      if (isRichTextTracingCheckBox.IsChecked.Value) {
+      if (isRichTextTracingCheckBox.IsChecked!.Value) {
         traceRichTextBox.Visibility = Visibility.Visible;
         traceTextBox.Visibility = Visibility.Collapsed;
       } else {
@@ -270,9 +273,10 @@ namespace WpfTestbench {
     }
 
 
-    Queue<String> lines = new Queue<string>(MaxLinesStored);
-    Queue<String> paragraphs = new Queue<string>(MaxLinesStored);
-    StringBuilder traceStringBuilder = new StringBuilder();
+    public const int MaxLinesStored = 400;
+
+    readonly Queue<String> lines = new(MaxLinesStored);
+    readonly StringBuilder traceStringBuilder = new();
     DateTime previousMessageDate = DateTime.MaxValue;
 
 
@@ -288,12 +292,12 @@ namespace WpfTestbench {
 
 //var stopwatch = new System.Diagnostics.Stopwatch();
 //stopwatch.Start();
-      if (isRichTextTracingCheckBox.IsChecked.Value) {
+      if (isRichTextTracingCheckBox.IsChecked!.Value) {
         //RichTextBox
         foreach (TraceMessage traceMessage in traceMessageEnumerable) {
           if (isFiltered(traceMessage)) continue;
 
-          TableRow tableRow = new TableRow();
+          TableRow tableRow = new();
 
           //traceTable.RowGroups
           if (traceMessage==null) {
@@ -352,7 +356,7 @@ namespace WpfTestbench {
 
 
     private bool isFiltered(TraceMessage traceMessage) {
-      if (isFilterCheckBox.IsChecked.Value) {
+      if (isFilterCheckBox.IsChecked!.Value) {
         if (FilterFunc==null) {
           //standard filter
           if (traceMessage.FilterText==null) return true;
@@ -365,8 +369,8 @@ namespace WpfTestbench {
     }
 
 
-    private void addCell(TableRow tableRow, string cellText, SolidColorBrush foregroundBrush, bool isDistanceNeeded) {
-      TableCell tableCell = new TableCell(new Paragraph(new Run { Text = cellText, Foreground=foregroundBrush }));
+    private static void addCell(TableRow tableRow, string cellText, SolidColorBrush foregroundBrush, bool isDistanceNeeded) {
+      var tableCell = new TableCell(new Paragraph(new Run { Text = cellText, Foreground=foregroundBrush }));
       if (isDistanceNeeded) {
         tableCell.Padding = new Thickness(0, 10, 0, 0);
       }

@@ -33,7 +33,8 @@ namespace WpfTestbench {
 
 
   /// <summary>
-  /// StackPanel with event tracing for TestBench.
+  /// A control writing Text into a Rectangle filled with Fill Brush colour. The rectangle.X = 1/5 control's 
+  /// width, rectangle.Y = 1/5 control's height, rectangle.Width = 2/5, rectangle.Height = 2/5. 
   /// </summary>
   public class ControlTraced: ControlWithConstructor, ITraceName{
 
