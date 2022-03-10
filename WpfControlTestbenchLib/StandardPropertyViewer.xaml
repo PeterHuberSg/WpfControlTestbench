@@ -30,31 +30,29 @@ This software is distributed without any warranty.
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto"/>
-      <ColumnDefinition Width="60"/>
-      <ColumnDefinition Width="60"/>
-      <ColumnDefinition Width="60" Name="ContentColumn"/>
-      <ColumnDefinition Width="50"/>
-      <ColumnDefinition Width="50"/>
-      <ColumnDefinition Width="50"/>
-      <ColumnDefinition Width="50" Name="BorderLeftColumn"/>
-      <ColumnDefinition Width="50" Name="PaddingLeftColumn"/>
-      <ColumnDefinition Width="50" Name="PaddingRightColumn"/>
-      <ColumnDefinition Width="50" Name="BorderRightColumn"/>
-      <ColumnDefinition Width="50"/><!--Margin Right-->
-      <ColumnDefinition Width="50"/><!--Desired-->
-      <ColumnDefinition Width="50"/><!--Render-->
+      <ColumnDefinition Width="45"/><!--Width, Height-->
+      <ColumnDefinition Width="64"/><!--Algin Control-->
+      <ColumnDefinition Width="64" Name="ContentColumn"/><!--Algin Content-->
+      <ColumnDefinition Width="45"/><!--Min-->
+      <ColumnDefinition Width="45"/><!--Max-->
+      <ColumnDefinition Width="45"/><!--Margin Left Top-->
+      <ColumnDefinition Width="45" Name="BorderLeftColumn"/>
+      <ColumnDefinition Width="45" Name="PaddingLeftColumn"/>
+      <ColumnDefinition Width="45" Name="PaddingRightColumn"/>
+      <ColumnDefinition Width="45" Name="BorderRightColumn"/>
+      <ColumnDefinition Width="45"/><!--Margin Right-->
+      <ColumnDefinition Width="45"/><!--Desired-->
+      <ColumnDefinition Width="45"/><!--Render-->
       <ColumnDefinition Width="5" Name="ColorEmptyColumn"/>
       <ColumnDefinition Width="70" Name="ColorColumn"/>
       <ColumnDefinition Width="80" Name="FontColumn"/>
       <ColumnDefinition Width="60" Name="FontSizeColumn"/>
       <ColumnDefinition Width="60" Name="FontWeightColumn"/>
       <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="auto"/>
       <ColumnDefinition Width="auto"/>
     </Grid.ColumnDefinitions>
     <Grid.Resources>
@@ -79,15 +77,15 @@ This software is distributed without any warranty.
     <TextBlock Grid.Row="0" Grid.Column="5" VerticalAlignment="Bottom" Text="Max" FontWeight="Bold"/>
     <TextBlock Grid.Row="0" Grid.Column="6" VerticalAlignment="Bottom" Text="Margin" FontWeight="Bold" Background="#40909090"/>
     <TextBlock Grid.Row="0" Grid.Column="7" VerticalAlignment="Bottom" Text="Border" FontWeight="Bold" Background="#70909090"/>
-    <TextBlock Grid.Row="0" Grid.Column="8" VerticalAlignment="Bottom" Text="Padding" FontWeight="Bold" Background="#B0909090"/>
-    <TextBlock Grid.Row="0" Grid.Column="9" VerticalAlignment="Bottom" Text="Padding" FontWeight="Bold" Background="#B0909090"/>
+    <TextBlock Grid.Row="0" Grid.Column="8" VerticalAlignment="Bottom" Text="Padding" FontWeight="Bold" Background="#B0909090" Grid.ColumnSpan="2" TextAlignment="Center"/>
     <TextBlock Grid.Row="0" Grid.Column="10" VerticalAlignment="Bottom" Text="Border" FontWeight="Bold" Background="#70909090"/>
     <TextBlock Grid.Row="0" Grid.Column="11" VerticalAlignment="Bottom" Text="Margin" FontWeight="Bold" Background="#40909090"/>
     <TextBlock Grid.Row="0" Grid.Column="12" VerticalAlignment="Bottom" Text="Desired" FontWeight="Bold"/>
     <TextBlock Grid.Row="0" Grid.Column="13" VerticalAlignment="Bottom" Text="Render" FontWeight="Bold"/>
     <TextBlock Grid.Row="0" Grid.Column="15" VerticalAlignment="Bottom" Text="Color" FontWeight="Bold"/>
     <TextBlock Grid.Row="0" Grid.Column="16" VerticalAlignment="Bottom" Text="Font" FontWeight="Bold"/>
-    <CheckBox  Grid.Row="0" Grid.Column="20" Name="GridLinesCheckBox" Content="_GridLines" Margin="5,0,5,0" IsChecked="True"/>
+    <TextBlock Grid.Row="0" Grid.Column="20" VerticalAlignment="Bottom" Text="Test" FontWeight="Bold"/>
+    <CheckBox  Grid.Row="0" Grid.Column="21" Name="GridLinesCheckBox" Content="_GridLines" Margin="5,0,5,0" IsChecked="True"/>
 
     <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Text="Container" FontWeight="Bold"/>
     <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Text="Width" FontWeight="Bold"/>
@@ -107,12 +105,13 @@ This software is distributed without any warranty.
     <TextBlock Grid.Row="1" Grid.Column="16" VerticalAlignment="Bottom" Text="Font"/>
     <TextBlock Grid.Row="1" Grid.Column="17" VerticalAlignment="Bottom" Text="Size"/>
     <TextBlock Grid.Row="1" Grid.Column="18" VerticalAlignment="Bottom" Text="Weight"/>
-    <Button    Grid.Row="1" Grid.Column="20" Name="NextTestButton" Content="_Next Test" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
+    <Button    Grid.Row="1" Grid.Column="20" Name="NextTestButton" Content="_Next" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
+    <CheckBox  Grid.Row="1" Grid.Column="21" Name="BreakOnExceptionCheckBox" Content="_Break on Except." Margin="5,0,5,0"/>
 
     <ComboBox  Grid.Row="2" Grid.Column="0" Name="ContainerComboBox"/>
     <TextBox   Grid.Row="2" Grid.Column="1" Name="WidthTextBox"/>
-    <ComboBox  Grid.Row="2" Grid.Column="2" Name="HorizontalAlignmentComboBox"  HorizontalAlignment="Left"/>
-    <ComboBox  Grid.Row="2" Grid.Column="3" Name="HorizontalContentAlignmentComboBox"  HorizontalAlignment="Left"/>
+    <ComboBox  Grid.Row="2" Grid.Column="2" Name="HorizontalAlignmentComboBox"/>
+    <ComboBox  Grid.Row="2" Grid.Column="3" Name="HorizontalContentAlignmentComboBox"/>
     <TextBox   Grid.Row="2" Grid.Column="4" Name="MinWidthTextBox"/>
     <TextBox   Grid.Row="2" Grid.Column="5" Name="MaxWidthTextBox"/>
     <TextBox   Grid.Row="2" Grid.Column="6" Name="MarginLeftTextBox"/>
@@ -127,7 +126,8 @@ This software is distributed without any warranty.
     <!--<ComboBox Grid.Row="2" Grid.Column="16" Name="FontFamilyComboBox"/> further down, because too many lines-->
     <ComboBox  Grid.Row="2" Grid.Column="17" Name="FontSizeComboBox" HorizontalContentAlignment="Right"/>
     <ComboBox  Grid.Row="2" Grid.Column="18" Name="FontWeightComboBox" HorizontalContentAlignment="Right"/>
-    <Button    Grid.Row="2" Grid.Column="20" Name="TemplateButton" Content="_Show Template" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
+    <Button    Grid.Row="2" Grid.Column="20" Name="PreviousTestButton" Content="_Previous" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
+    <Button    Grid.Row="2" Grid.Column="21" Name="TemplateButton" Content="_Show Template" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
 
     <CheckBox  Grid.Row="3" Grid.Column="0" Name="ContainerTraceCheckBox" Content="Trace" IsChecked="True"/>
     <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Bottom" Text="Height" FontWeight="Bold"/>
@@ -147,11 +147,12 @@ This software is distributed without any warranty.
     <TextBlock Grid.Row="3" Grid.Column="16" VerticalAlignment="Bottom" Text="Foreground"/>
     <TextBlock Grid.Row="3" Grid.Column="17" VerticalAlignment="Bottom" Text="Style"/>
     <TextBlock Grid.Row="3" Grid.Column="18" VerticalAlignment="Bottom" Text="Stretch"/>
-    <CheckBox  Grid.Row="3" Grid.Column="20" Name="BreakOnExceptionCheckBox" Content="_Break on Except." Margin="5,0,5,0"/> 
+    <TextBox   Grid.Row="3" Grid.Column="19" Grid.ColumnSpan="3" Name="TestTextBox" IsReadOnly="True" 
+               Visibility="Hidden" HorizontalContentAlignment="Left"/>
 
     <TextBox   Grid.Row="4" Grid.Column="1" Name="HeightTextBox" />
-    <ComboBox  Grid.Row="4" Grid.Column="2" Name="VerticalAlignmentComboBox"  HorizontalAlignment="Left"/>
-    <ComboBox  Grid.Row="4" Grid.Column="3" Name="VerticalContentAlignmentComboBox"  HorizontalAlignment="Left"/>
+    <ComboBox  Grid.Row="4" Grid.Column="2" Name="VerticalAlignmentComboBox"/>
+    <ComboBox  Grid.Row="4" Grid.Column="3" Name="VerticalContentAlignmentComboBox"/>
     <TextBox   Grid.Row="4" Grid.Column="4" Name="MinHeightTextBox"/>
     <TextBox   Grid.Row="4" Grid.Column="5" Name="MaxHeightTextBox"/>
     <TextBox   Grid.Row="4" Grid.Column="6" Name="MarginTopTextBox"/>
@@ -166,7 +167,8 @@ This software is distributed without any warranty.
     <WpfTestbench:StandardColorComboBox Grid.Row="4" Grid.Column="16" x:Name="ForegroundColorComboBox"/>
     <ComboBox  Grid.Row="4" Grid.Column="17" Name="FontStyleComboBox"/>
     <ComboBox  Grid.Row="4" Grid.Column="18" Name="FontStretchComboBox"/>
-    <Button    Grid.Row="4" Grid.Column="20" Name="DebugButton" Content="Switch to _Debugger" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
+    <Button    Grid.Row="4" Grid.Column="20" Name="ResetButton" Content="_Reset" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
+    <Button    Grid.Row="4" Grid.Column="21" Name="DebugButton" Content="Switch to _Debugger" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
 
     <ComboBox Grid.Row="2" Grid.Column="16" Name="FontFamilyComboBox"
           xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
