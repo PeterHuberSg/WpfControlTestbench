@@ -31,19 +31,12 @@ namespace WpfTestbench {
       StackPanelButton.Click += StackPanelButton_Click;
       TextBoxButton.Click += TextBoxButton_Click;
 
-      ControlButton.Click += ControlButton_Click;
-
       TodoTexBox.Text =
         "Add file headers" + Environment.NewLine +
         "Move DummyConverter to CustomControlBaseLib" + Environment.NewLine +
         "Can Generic.xaml be replaced" + Environment.NewLine +
         "Can TracedLib be replaced with reflection ? Probably not" + Environment.NewLine +
         @"Original code: D:\Visual Studio 2010\Projects\CodeProject\WpfControlTestbench\WpfControlTestbenchDev";
-    }
-
-
-    private void ControlButton_Click(object sender, RoutedEventArgs e) {
-      ControlWindow.Show(this);
     }
 
 

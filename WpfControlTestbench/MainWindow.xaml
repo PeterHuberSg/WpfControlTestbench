@@ -3,15 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         SizeToContent="WidthAndHeight"
         Title="WPF Control Testbench" >
-  <StackPanel HorizontalAlignment="Left" Margin="6">
+  <StackPanel Orientation="Horizontal" Background="White">
     <StackPanel.Resources>
       <Style TargetType="Button">
         <Setter Property="Margin" Value="2"/>
       </Style>
+      <Style TargetType="StackPanel">
+        <Setter Property="Background" Value="WhiteSmoke"/>
+      </Style>
     </StackPanel.Resources>
 
-    <TextBox x:Name="TodoTexBox" AcceptsReturn="True"/>
-    <Button Name="StackPanelButton" Content="_StackPanel"/>
-    <Button Name="TextBoxButton" Content="_Textbox"/>
+    <StackPanel HorizontalAlignment="Left" Margin="6">
+      <Button Name="StackPanelButton" Content="_StackPanel"/>
+      <Button Name="TextBoxButton" Content="_Textbox"/>
+      <TextBox x:Name="TodoTexBox" AcceptsReturn="True"/>
+    </StackPanel>
+
+    <StackPanel HorizontalAlignment="Left" Margin="0,6,6,6">
+      <Button Name="ControlButton" Content="_Control"/>
+    </StackPanel>
   </StackPanel>
 </Window>

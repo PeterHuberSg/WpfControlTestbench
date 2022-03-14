@@ -23,7 +23,7 @@ This software is distributed without any warranty.
              xmlns:WpfTestbench="clr-namespace:WpfTestbench"
              mc:Ignorable="d" 
              d:DesignHeight="120" d:DesignWidth="1200" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
-  <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,5,0,5">
+  <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3,5,3,5">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
@@ -51,9 +51,10 @@ This software is distributed without any warranty.
       <ColumnDefinition Width="80" Name="FontColumn"/>
       <ColumnDefinition Width="60" Name="FontSizeColumn"/>
       <ColumnDefinition Width="60" Name="FontWeightColumn"/>
+      <ColumnDefinition Width="5"/>
+      <ColumnDefinition Width="auto"/>
+      <ColumnDefinition Width="auto"/>
       <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="auto"/>
-      <ColumnDefinition Width="auto"/>
     </Grid.ColumnDefinitions>
     <Grid.Resources>
       <Style TargetType="ComboBox">
@@ -147,8 +148,8 @@ This software is distributed without any warranty.
     <TextBlock Grid.Row="3" Grid.Column="16" VerticalAlignment="Bottom" Text="Foreground"/>
     <TextBlock Grid.Row="3" Grid.Column="17" VerticalAlignment="Bottom" Text="Style"/>
     <TextBlock Grid.Row="3" Grid.Column="18" VerticalAlignment="Bottom" Text="Stretch"/>
-    <TextBox   Grid.Row="3" Grid.Column="19" Grid.ColumnSpan="3" Name="TestTextBox" IsReadOnly="True" 
-               Visibility="Hidden" HorizontalContentAlignment="Left"/>
+    <TextBox   Grid.Row="3" Grid.Column="20" Grid.ColumnSpan="3" Name="TestTextBox" IsReadOnly="True" 
+               Visibility="Hidden" HorizontalContentAlignment="Left" Margin="5,0,5,0"/>
 
     <TextBox   Grid.Row="4" Grid.Column="1" Name="HeightTextBox" />
     <ComboBox  Grid.Row="4" Grid.Column="2" Name="VerticalAlignmentComboBox"/>

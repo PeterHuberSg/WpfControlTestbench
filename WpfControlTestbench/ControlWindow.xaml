@@ -1,35 +1,30 @@
-﻿<WpfControlTestbenchLib:TestbenchWindow x:Class="WpfControlTestbench.ControlWindow"
+﻿<Window x:Class="WpfTestbench.ControlWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:WpfTestbench="clr-namespace:WpfTestbench"
+        xmlns:local="clr-namespace:WpfTestbench"
         xmlns:WpfControlTestbenchLib="clr-namespace:WpfTestbench;assembly=WpfControlTestbenchLib"
         xmlns:TracedControlsLib="clr-namespace:WpfTestbench;assembly=TracedControlsLib"
         mc:Ignorable="d"
-        Title="ControlWindow" Height="450" Width="800">
-    <WpfControlTestbenchLib:WpfControlTestbench Name="TestBench">
-        <WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>
-            <TracedControlsLib:ControlTraced Name="TestControlTraced" Text="Hello World" 
-              BorderBrush="DarkBlue" Background="CornflowerBlue" Fill="AliceBlue"
-              BorderThickness="2,3,4,5" Padding="4,5,6,7" Margin="8,9,10,11"/>
-        </WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>
-        <Grid Margin="5,3,5,3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+        Title="Inherited from Control">
+  <Grid>
+    <WpfControlTestbenchLib:TestBench>
+      <WpfControlTestbenchLib:TestBench.TestProperties>
+        <StackPanel Margin="5,3,5,3" Orientation="Horizontal">
+          <Label Content="_Fill:"/>
+          <WpfControlTestbenchLib:StandardColorComboBox Grid.Row="0" Grid.Column="1" Name="FillStandardColorComboBox" VerticalAlignment="Center"
+               MinWidth="100"/>
+          <Label Content="_Text:"/>
+          <TextBox x:Name="TextTextBox" MinWidth="80" Text="Hello World" VerticalAlignment="Center"/>
+        </StackPanel>
 
-            <Label Grid.Row="0" Grid.Column="0" Content="_Fill"/>
-            <WpfControlTestbenchLib:StandardColorComboBox Grid.Row="0" Grid.Column="1" Name="FillStandardColorComboBox" VerticalAlignment="Center"/>
-            <!--<Button Grid.Row="0" Grid.Column="2" Name="AddChildButton" Content="Add Child" VerticalAlignment="Center" Margin="5,0,0,0"/>-->
-        </Grid>
-    </WpfControlTestbenchLib:WpfControlTestbench>
-</WpfControlTestbenchLib:TestbenchWindow>
+      </WpfControlTestbenchLib:TestBench.TestProperties>
+      <WpfControlTestbenchLib:TestBench.TestControl>
+        <TracedControlsLib:ControlTraced Name="TestControlTraced" Text="Hello World" 
+                BorderBrush="DarkBlue" Background="CornflowerBlue" Fill="AliceBlue"
+                BorderThickness="2,3,4,5" Padding="4,5,6,7" Margin="8,9,10,11"/>
+      </WpfControlTestbenchLib:TestBench.TestControl>
+    </WpfControlTestbenchLib:TestBench>
+  </Grid>
+</Window>

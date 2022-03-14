@@ -28,7 +28,7 @@ namespace WpfTestbench {
   /// Helper class to allow using StackPanelTraced constructor with a parameter.
   /// </summary>
   public class ControlWithConstructor: Control {
-    public ControlWithConstructor(object _) : base() { }
+    public ControlWithConstructor(object? _) : base() { }
   }
 
 
@@ -96,8 +96,6 @@ namespace WpfTestbench {
     //      -----------
 
     static ControlTraced() {
-      //FrameworkElement.HorizontalAlignmentProperty.OverrideMetadata(typeof(ControlTraced), new FrameworkPropertyMetadata(HorizontalAlignment.Stretch, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
-      //FrameworkElement.VerticalAlignmentProperty.OverrideMetadata(typeof(ControlTraced), new FrameworkPropertyMetadata(VerticalAlignment.Stretch, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
       Control.BorderThicknessProperty.OverrideMetadata(typeof(ControlTraced), new FrameworkPropertyMetadata(new Thickness(), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
       Control.BorderBrushProperty.OverrideMetadata(typeof(ControlTraced), new FrameworkPropertyMetadata(Brushes.Black, FrameworkPropertyMetadataOptions.AffectsRender));
       Control.PaddingProperty.OverrideMetadata(typeof(ControlTraced), new FrameworkPropertyMetadata(new Thickness(), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
@@ -190,7 +188,6 @@ namespace WpfTestbench {
     ushort[] glyphIndexes;
     double[] advanceWidths;
     GlyphRun glyphRun;
-
 
 
     protected override void OnRender(DrawingContext drawingContext) {

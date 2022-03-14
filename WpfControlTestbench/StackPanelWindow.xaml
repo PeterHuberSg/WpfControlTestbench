@@ -1,30 +1,27 @@
-﻿<WpfControlTestbenchLib:TestbenchWindow x:Class="WpfTestbench.StackPanelWindow"
+﻿<Window x:Class="WpfTestbench.StackPanelWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:WpfTestbench="clr-namespace:WpfTestbench"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfTestbench"
         xmlns:WpfControlTestbenchLib="clr-namespace:WpfTestbench;assembly=WpfControlTestbenchLib"
         xmlns:TracedControlsLib="clr-namespace:WpfTestbench;assembly=TracedControlsLib"
-        Title="StackPanel Testbench">
-    <WpfControlTestbenchLib:WpfControlTestbench Name="TestBench">
-      <WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>
-      <WpfControlTestbenchLib:StackPanelTraced Name="TestStackPanelTraced" Background="AliceBlue" Margin="10" />
-      </WpfControlTestbenchLib:WpfControlTestbench.TestFrameworkElement>
-      <Grid Margin="5,3,5,3">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="auto"/>
-          <RowDefinition Height="auto"/>
-          <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="auto"/>
-          <ColumnDefinition Width="auto"/>
-          <ColumnDefinition Width="auto"/>
-          <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-
-        <Label Grid.Row="0" Grid.Column="0" Content="_Background"/>
+        mc:Ignorable="d"
+        Title="StackPanel">
+  <WpfControlTestbenchLib:TestBench>
+    <WpfControlTestbenchLib:TestBench.TestProperties>
+      <StackPanel Margin="5,3,5,3" Orientation="Horizontal">
+        <Label Content="_Background" Target="{Binding ElementName=BackgroundStandardColorComboBox}"/>
         <WpfControlTestbenchLib:StandardColorComboBox Grid.Row="0" Grid.Column="1" Name="BackgroundStandardColorComboBox" VerticalAlignment="Center"/>
-        <Button Grid.Row="0" Grid.Column="2" Name="AddChildButton" Content="Add Child" VerticalAlignment="Center" Margin="5,0,0,0"/>
-      </Grid>
-    </WpfControlTestbenchLib:WpfControlTestbench>
-</WpfControlTestbenchLib:TestbenchWindow>
+        <Label Content="Orientation" Margin="5,0,0,0"/>
+        <RadioButton x:Name="VerticalRadioButton" Content="_Vertical" IsChecked="True" VerticalAlignment="Center"/>
+        <RadioButton x:Name="HorizontalRadioButton" Content="_Horizontal" VerticalAlignment="Center" Margin="5,0,0,0"/>
+        <Button Name="AddChildButton" Content="Add Child" VerticalAlignment="Center" Margin="10,0,0,0"/>
+      </StackPanel>
+
+    </WpfControlTestbenchLib:TestBench.TestProperties>
+    <WpfControlTestbenchLib:TestBench.TestControl>
+      <WpfControlTestbenchLib:StackPanelTraced Name="TestStackPanelTraced" Background="AliceBlue" Margin="10" />
+    </WpfControlTestbenchLib:TestBench.TestControl>
+  </WpfControlTestbenchLib:TestBench>
+</Window>
