@@ -119,7 +119,7 @@ namespace WpfTestbench {
         testFrameworkElement.LayoutUpdated += testFrameworkElement_LayoutUpdated;
 
       } catch (Exception ex) {
-        TracerLib.Tracer.Exception(ex, "");
+        Tracer.Exception(ex, "");
         throw;
       }
     }
@@ -136,7 +136,7 @@ namespace WpfTestbench {
       GridLinesCheckBox.Click += gridLinesCheckBox_Click;
       TemplateButton.Click += templateButton_Click;
       DebugButton.Click += debugButton_Click;
-      BreakOnExceptionCheckBox.IsChecked = TracerLib.Tracer.IsBreakOnException;
+      BreakOnExceptionCheckBox.IsChecked = Tracer.IsBreakOnException;
       BreakOnExceptionCheckBox.Checked += new RoutedEventHandler(breakOnExceptionCheckBox_Checked);
       BreakOnExceptionCheckBox.Unchecked += new RoutedEventHandler(breakOnExceptionCheckBox_Checked);
 
@@ -158,9 +158,9 @@ namespace WpfTestbench {
 
 
     private void breakOnExceptionCheckBox_Checked(object sender, RoutedEventArgs e) {
-      TracerLib.Tracer.IsBreakOnException = BreakOnExceptionCheckBox.IsChecked!.Value;
-      TracerLib.Tracer.IsBreakOnError = TracerLib.Tracer.IsBreakOnException;
-      TracerLib.Tracer.IsBreakOnWarning = TracerLib.Tracer.IsBreakOnException;
+      Tracer.IsBreakOnException = BreakOnExceptionCheckBox.IsChecked!.Value;
+      Tracer.IsBreakOnError = Tracer.IsBreakOnException;
+      Tracer.IsBreakOnWarning = Tracer.IsBreakOnException;
     }
 
 

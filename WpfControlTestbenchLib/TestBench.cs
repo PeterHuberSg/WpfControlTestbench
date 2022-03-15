@@ -1,20 +1,17 @@
-﻿using CustomControlBaseLib;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using TracerLib;
+
 
 namespace WpfTestbench {
-  
-  
-  public class TestBench: CustomControlBase {
+
+
+  public class TestBench: Control {
 
     #region Properties
     //      ----------
@@ -144,7 +141,13 @@ namespace WpfTestbench {
     readonly GridSplitter vSplitter;
     readonly WpfTraceViewer wpfTraceViewer;
 
+    readonly List<Visual> children; //use LogicalChildren to get the children
+    readonly VisualCollection visualCollection;
+
+
+    #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
     public TestBench() {
+    #pragma warning restore CS8618 // 
       Background = Brushes.Gainsboro;
 
       outerGrid = new Grid();
@@ -152,7 +155,14 @@ namespace WpfTestbench {
       outerGrid.RowDefinitions.Add(new RowDefinition { Height =  GridLength.Auto });//Standard Properties
       outerGrid.RowDefinitions.Add(new RowDefinition { Height =  GridLength.Auto });//hSpliter
       outerGrid.RowDefinitions.Add(new RowDefinition { /*1Star*/ }); //InnerGrid
-      AddChild(outerGrid);
+      children = new List<Visual> {
+        outerGrid
+      };
+      AddLogicalChild(outerGrid); //equivalent to outerGrid.Parent = this;
+      //add outerGrid to visual tree
+      visualCollection = new VisualCollection(this) {
+        outerGrid
+      };
 
       //TestProperties gets added in TestPropertiesChanged() to outerGrid
       //row = 0; column = 0
@@ -515,7 +525,7 @@ namespace WpfTestbench {
     }
 
 
-    private void updateThickness(ref Thickness thickness, Thickness newThickness, ref bool isHorizontalChange, ref bool isVerticalChange) {
+    private static void updateThickness(ref Thickness thickness, Thickness newThickness, ref bool isHorizontalChange, ref bool isVerticalChange) {
       if (thickness==newThickness) return;
 
       isHorizontalChange = isHorizontalChange | (thickness.Top!=newThickness.Top) | (thickness.Bottom!=newThickness.Bottom);
@@ -566,6 +576,7 @@ namespace WpfTestbench {
 
     private void updateOrigineShadowPosition() {
       origineShadow.HorizontalAlignment = TestControl!.HorizontalAlignment;
+      #pragma warning disable IDE0045 // Convert to conditional expression
       if (origineShadow.HorizontalAlignment==HorizontalAlignment.Stretch && double.IsNaN(TestControl.Width)) {
         origineShadow.Width = double.NaN;
       } else {
@@ -577,6 +588,7 @@ namespace WpfTestbench {
       } else {
         origineShadow.Height = Math.Max(strokeThickness, TestControl.ActualHeight);
       }
+      #pragma warning restore IDE0045
     }
     #endregion
 
@@ -589,8 +601,8 @@ namespace WpfTestbench {
 
 
     const double nan = double.NaN;
-    readonly static FontFamily arial = new FontFamily("Ariel");
-    readonly static FontFamily couri = new FontFamily("Courier New");
+    readonly static FontFamily arial = new("Ariel");
+    readonly static FontFamily couri = new("Courier New");
     const HorizontalAlignment hstr = HorizontalAlignment.Stretch;
     const HorizontalAlignment left = HorizontalAlignment.Left;
     const HorizontalAlignment hcen = HorizontalAlignment.Center;
@@ -985,14 +997,43 @@ namespace WpfTestbench {
         control.BorderBrush = previousBorderBrush;
       }
     }
+    #endregion
 
+
+    #region Visual and Logical Tree
+    //      -----------------------
+
+    //Provides access to the logical children(Logical tree)
+    protected override IEnumerator LogicalChildren {
+      get {
+        return children.GetEnumerator();
+      }
+    }
+
+
+    /// <summary>
+    /// Number of Visuals added as children to this control by inheriting class.
+    /// </summary>
+    protected override sealed int VisualChildrenCount {
+      get {
+        return visualCollection.Count;
+      }
+    }
+
+
+    /// <summary>
+    /// Returns a Visual added by inheriting class.
+    /// </summary>
+    protected override sealed Visual GetVisualChild(int index) {
+      return visualCollection[index];
+    }
     #endregion
 
 
     #region Layouting
     //      ---------
 
-    protected override Size MeasureContentOverride(Size constraint) {
+    protected override Size MeasureOverride(Size constraint) {
       outerGrid.Measure(constraint);
       var width = double.IsInfinity(constraint.Width) ? outerGrid.DesiredSize.Width : constraint.Width;
       var height = double.IsInfinity(constraint.Height) ? outerGrid.DesiredSize.Height : constraint.Height;
@@ -1000,9 +1041,9 @@ namespace WpfTestbench {
     }
 
 
-    protected override Size ArrangeContentOverride(Rect arrangeRect) {
-      outerGrid.Arrange(arrangeRect);
-      return arrangeRect.Size;
+    protected override Size ArrangeOverride(Size arrangeBounds) {
+      outerGrid.Arrange(new Rect(arrangeBounds));
+      return arrangeBounds;
     }
     #endregion
   }

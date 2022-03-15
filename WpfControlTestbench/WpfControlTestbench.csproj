@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TracedControlsLib\TracedControlsLib.csproj" />
     <ProjectReference Include="..\WpfControlTestbenchLib\WpfControlTestbenchLib.csproj" />
   </ItemGroup>
 

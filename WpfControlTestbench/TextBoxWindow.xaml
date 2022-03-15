@@ -178,7 +178,7 @@
       </StackPanel>
     </TBLib:TestBench.TestProperties>
     <TBLib:TestBench.TestControl>
-      <TracedControlsLib:TextBoxTraced Name="TestTextBoxTraced" Background="AliceBlue" Margin="10" AcceptsReturn="True"/>
+      <local:TextBoxTraced x:Name="TestTextBoxTraced" Background="AliceBlue" Margin="10" AcceptsReturn="True"/>
     </TBLib:TestBench.TestControl>
   </TBLib:TestBench>
 </Window>

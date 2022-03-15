@@ -21,7 +21,7 @@
 
       </WpfControlTestbenchLib:TestBench.TestProperties>
       <WpfControlTestbenchLib:TestBench.TestControl>
-        <TracedControlsLib:ControlTraced Name="TestControlTraced" Text="Hello World" 
+        <local:ControlTraced x:Name="TestControlTraced" Text="Hello World" 
                 BorderBrush="DarkBlue" Background="CornflowerBlue" Fill="AliceBlue"
                 BorderThickness="2,3,4,5" Padding="4,5,6,7" Margin="8,9,10,11"/>
       </WpfControlTestbenchLib:TestBench.TestControl>

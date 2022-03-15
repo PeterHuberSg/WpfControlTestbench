@@ -7,13 +7,4 @@
     <RootNamespace>WpfTestbench</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\CustomControlBaseLib\CustomControlBaseLib\CustomControlBaseLib.csproj" />
-    <ProjectReference Include="..\..\TracerLib\TracerLib\TracerLib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Themes\" />
-  </ItemGroup>
-
 </Project>
