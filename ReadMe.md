@@ -193,7 +193,7 @@ MeasureOverride().
 That new class needs to implement the simple `WpfControlTestbench` interface  
 ITraceName or IIsTracing to support tracing:
 
-    ```cs
+    ```C#
     /// <summary>
     /// Provides a name for tracing
     /// </summary>
@@ -230,7 +230,7 @@ inheritance:
 
 YourControl => YourControlWithConstructor => YourControlTraced
 
-    ```cs
+    ```C#
     public class YourControlWithConstructor: YourControl { 
       public YourControlWithConstructor(object? _) : base() { }
     }
@@ -248,7 +248,7 @@ YourControl => YourControlWithConstructor => YourControlTraced
 
 In XAML you place your test control like this:
 
-    ```XAML
+    ```xml
     <local:YourControlTraced"/>
     ```
 
@@ -273,7 +273,7 @@ This XAML creates a C# line calling the parameterless constructor of YourControl
 
 Here is a complete code example to prepare StackPanel to be used in TestBench:
 
-    ```cs
+    ```C#
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
@@ -353,7 +353,7 @@ designer to see the new control.
 
 In the code behind file you have to write only few lines of code:
  
-    ```cs
+    ```C#
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Media;
@@ -380,7 +380,7 @@ done with just defining a binding in XAML or code behind. Easy, right ?
 
 I wrote `WpfBinding()` to make my code look nicer when setting up a WPF binding:
 
-    ```cs
+    ```C#
     /// <summary>
     /// Helper class for setting up WPF bindings
     /// </summary>
@@ -411,7 +411,7 @@ I wrote `WpfBinding()` to make my code look nicer when setting up a WPF binding:
 
 You add lines like this to the constructor of your test window:
 
-    ```cs
+    ```C#
     TestBench.TestFunctions.Add(("Green Fill", fillGreen));
     TestBench.TestFunctions.Add(("Red Fill", ()=>{ TestControlTraced.Fill = Brushes.Red; return null;}));
     TestBench.TestFunctions.Add(("Ratio", testRatio));
@@ -421,7 +421,7 @@ You add lines like this to the constructor of your test window:
 `TestFunctions` is a `List` in `TestBench`. Each entry is a test. At that point it is 
 empty. `TestBench` will add at a later time its 100+ tests.
 
-    ```cs
+    ```C#
     public readonly List<(string Name, Func<Action?> Function)> TestFunctions;
     ```
 
@@ -432,7 +432,7 @@ to verify if the test was successful in the test function. The verify action
 will get executed when the user presses the `NextButton` to execute the next 
 text.
 
-    ```cs
+    ```C#
     private Action? testRatio() {
       oldWidth = TestControlTraced.Width;
       TestControlTraced.Width = 200;
@@ -471,7 +471,7 @@ It might be useful if the user can reset the property values which were changed
 by your test. To do that, add these lines to the constructor of your test 
 window (for complete code, check *ControlWindow.xaml.cs*):
 
-    ```cs
+    ```C#
     resetFill = TestControlTraced.Fill;
     TestBench.ResetAction = () => TestControlTraced.Fill = resetFill;
     ```
