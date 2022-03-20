@@ -193,7 +193,7 @@ MeasureOverride().
 That new class needs to implement the simple `WpfControlTestbench` interface  
 ITraceName or IIsTracing to support tracing:
 
-    ```C#
+```C#
     /// <summary>
     /// Provides a name for tracing
     /// </summary>
@@ -216,7 +216,7 @@ ITraceName or IIsTracing to support tracing:
       /// </summary>
       public bool IsTracing { get; set; }
     }
-    ```
+```
 
 There was a difficult problem to solve for tracing. The trace should show 
 where the construction of your control starts, then which properties get set 
@@ -230,7 +230,7 @@ inheritance:
 
 YourControl => YourControlWithConstructor => YourControlTraced
 
-    ```C#
+```C#
     public class YourControlWithConstructor: YourControl { 
       public YourControlWithConstructor(object? _) : base() { }
     }
@@ -244,13 +244,13 @@ YourControl => YourControlWithConstructor => YourControlTraced
         TraceWPFEvents.TraceCreateEnd(traceName);
       }
     }
-    ```
+```
 
 In XAML you place your test control like this:
 
-    ```xml
+```xml
     <local:YourControlTraced"/>
-    ```
+```
 
 This XAML creates a C# line calling the parameterless constructor of YourControlTraced, which calls the other constructors like this:
 
@@ -273,7 +273,7 @@ This XAML creates a C# line calling the parameterless constructor of YourControl
 
 Here is a complete code example to prepare StackPanel to be used in TestBench:
 
-    ```C#
+```C#
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
@@ -312,7 +312,7 @@ Here is a complete code example to prepare StackPanel to be used in TestBench:
         }
       }
     }
-    ```
+```
 
 Special here is that in the layouting overrides `TraceWPFEvents` methods are 
 called, which
@@ -353,7 +353,7 @@ designer to see the new control.
 
 In the code behind file you have to write only few lines of code:
  
-    ```C#
+```C#
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Media;
@@ -373,14 +373,14 @@ In the code behind file you have to write only few lines of code:
         }
       }
     }
-    ```
+```
 
 All you have to do is to make your special properties work, which often can be 
 done with just defining a binding in XAML or code behind. Easy, right ?
 
 I wrote `WpfBinding()` to make my code look nicer when setting up a WPF binding:
 
-    ```C#
+```C#
     /// <summary>
     /// Helper class for setting up WPF bindings
     /// </summary>
@@ -405,25 +405,25 @@ I wrote `WpfBinding()` to make my code look nicer when setting up a WPF binding:
         return (BindingExpression)targetFrameworkElement.SetBinding(tragetDependencyProperty, newBinding);
       }
     }
-    ```
+```
 
 ## Adding your own tests
 
 You add lines like this to the constructor of your test window:
 
-    ```C#
+```C#
     TestBench.TestFunctions.Add(("Green Fill", fillGreen));
     TestBench.TestFunctions.Add(("Red Fill", ()=>{ TestControlTraced.Fill = Brushes.Red; return null;}));
     TestBench.TestFunctions.Add(("Ratio", testRatio));
     TestBench.TestFunctions.Add(("Reset Properties", resetProperties));
-    ```
+```
 
 `TestFunctions` is a `List` in `TestBench`. Each entry is a test. At that point it is 
 empty. `TestBench` will add at a later time its 100+ tests.
 
-    ```C#
+```C#
     public readonly List<(string Name, Func<Action?> Function)> TestFunctions;
-    ```
+```
 
 A test consists of a name and a function which executes the test and might 
 return another `Action`, which will verify if the test was successful or throw 
@@ -432,7 +432,7 @@ to verify if the test was successful in the test function. The verify action
 will get executed when the user presses the `NextButton` to execute the next 
 text.
 
-    ```C#
+```C#
     private Action? testRatio() {
       oldWidth = TestControlTraced.Width;
       TestControlTraced.Width = 200;
@@ -448,7 +448,7 @@ text.
           $"but was {TestControlTraced.ActualWidth}.");
       }
     }
-    ```
+```
 
 A failed test gets shown in the EventTracer like this:
 
@@ -471,10 +471,10 @@ It might be useful if the user can reset the property values which were changed
 by your test. To do that, add these lines to the constructor of your test 
 window (for complete code, check *ControlWindow.xaml.cs*):
 
-    ```C#
+```C#
     resetFill = TestControlTraced.Fill;
     TestBench.ResetAction = () => TestControlTraced.Fill = resetFill;
-    ```
+```
 
 `ResetAction` gets executed when the user presses the `ResetButton`.
 
