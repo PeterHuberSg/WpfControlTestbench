@@ -1,20 +1,27 @@
-﻿/**************************************************************************************
+﻿/********************************************************************************************************
 
 WpfTestbench.AxisLine
 =====================
 
 WPF Line used to display margin, border or padding
 
-Written 2014-2020 by Jürgpeter Huber 
-Contact: PeterCode at Peterbox dot com
+License
+-------
 
-To the extent possible under law, the author(s) have dedicated all copyright and 
-related and neighboring rights to this software to the public domain worldwide under
-the Creative Commons 0 license (details see COPYING.txt file, see also
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
 <http://creativecommons.org/publicdomain/zero/1.0/>). 
 
-This software is distributed without any warranty. 
-**************************************************************************************/
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -22,6 +29,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+
 
 namespace WpfTestbench {
 
@@ -230,34 +238,6 @@ namespace WpfTestbench {
         TransparentLine.HorizontalAlignment = VisibleLine.HorizontalAlignment = HorizontalAlignment.Stretch;
       }
       
-      //GradientStopCollection gradientStopCollection = new(4);
-      //GradientStop gradientStop0, gradientStop1;
-      //if (lineOrder==LineOrderEnum.first) {
-      //  gradientStop0 = new GradientStop(lineColor, 0);
-      //  gradientStopCollection.Add(gradientStop0);
-      //  gradientStop1 = new GradientStop(lineColor, 0.5);
-      //  gradientStopCollection.Add(gradientStop1);
-      //  gradientStopCollection.Add(new GradientStop(Colors.Transparent, 0.5));
-      //  gradientStopCollection.Add(new GradientStop(Colors.Transparent, 1));
-      //} else {
-      //  gradientStopCollection.Add(new GradientStop(Colors.Transparent, 0));
-      //  gradientStopCollection.Add(new GradientStop(Colors.Transparent, 0.5));
-      //  gradientStop0 = new GradientStop(lineColor, 0.5);
-      //  gradientStopCollection.Add(gradientStop0);
-      //  gradientStop1 = new GradientStop(lineColor, 0);
-      //  gradientStopCollection.Add(gradientStop1);
-      //}
-
-      //NameScope.SetNameScope(ThisLine, new NameScope());//used by storyboard to find named gradientstops
-      //storyboard = new Storyboard();
-      //addAnimation("GradientStop0", gradientStop0, lineColor, storyboard);
-      //addAnimation("GradientStop1", gradientStop1, lineColor, storyboard);
-
-      //ThisLine.Loaded += ThisLine_Loaded;
-
-      //LinearGradientBrush brush = dimension==DimensionEnum.width
-      //    ? new LinearGradientBrush(gradientStopCollection, 0)
-      //    : new LinearGradientBrush(gradientStopCollection, 90);
       VisibleLine.Stroke = axisLineContext[lineType];
 
       int[] strokeDashesVisible;
@@ -312,30 +292,6 @@ namespace WpfTestbench {
       TransparentLine.MouseMove += mouseMove;
       TransparentLine.MouseUp   += mouseUp;
     }
-
-
-    //private void addAnimation(string gradientName, GradientStop gradientStop, Color lineColor, Storyboard storyboard) {
-    //  // Register a name for each animated gradient stop with the line so that they can be controlled by
-    //  // a storyboard.
-    //  ThisLine.RegisterName(gradientName, gradientStop);
-
-    //  var gradientStopColorAnimation = new ColorAnimation {
-    //    From = Color.FromRgb((byte)(lineColor.R/2), (byte)(lineColor.G/2), (byte)(lineColor.B/2)),
-    //    To = Color.FromRgb((byte)((lineColor.R + 0xFF)/2), (byte)((lineColor.G + 0xFF)/2), (byte)((lineColor.B + 0xFF)/2)),
-    //    Duration = TimeSpan.FromSeconds(4),
-    //    AutoReverse = true,
-    //    RepeatBehavior = RepeatBehavior.Forever
-    //  };
-    //  Storyboard.SetTargetName(gradientStopColorAnimation, gradientName);
-    //  Storyboard.SetTargetProperty(gradientStopColorAnimation,
-    //      new PropertyPath(GradientStop.ColorProperty));
-    //  storyboard.Children.Add(gradientStopColorAnimation);
-    //}
-
-
-    //private void ThisLine_Loaded(object sender, RoutedEventArgs e) {
-    //  storyboard.Begin(ThisLine);
-    //}
     #endregion
 
 
@@ -374,7 +330,6 @@ namespace WpfTestbench {
           : (newMousePosition.X - startMousePosition.X)*multiplier;
       if (change==0) return;
 
-      //|| (LineType==LineTypeEnum.border && change<0)
       Thickness newThickness;
       if (Dimension==DimensionEnum.width) {
         if (LineOrder==LineOrderEnum.first) {
@@ -415,6 +370,9 @@ namespace WpfTestbench {
     #region Methods
     //      -------
 
+    /// <summary>
+    /// Positions AxisLine based on offset of TestControl
+    /// </summary>
     public void UpdateLinePosition(Point offsetPoint) {
       double visibleMargin;
       double transparentMargin;

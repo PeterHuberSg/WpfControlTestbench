@@ -27,7 +27,7 @@ namespace WpfTestbench {
   /// Helper class to allow using Panel constructor with a parameter.
   /// </summary>
   public class TextBoxWithConstructor: TextBox {
-    public TextBoxWithConstructor(object _):base(){}
+    public TextBoxWithConstructor(object? _):base(){}
   }
   
 

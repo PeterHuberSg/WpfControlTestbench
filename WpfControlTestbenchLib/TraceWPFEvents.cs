@@ -1,4 +1,37 @@
-﻿using System;
+﻿/********************************************************************************************************
+
+WpfTestbench.
+=================
+
+TraceWPFEvents makes it easy to trace WPF property changes and WPF layouting overrides with simple
+method calls.
+
+Methods
+-------
+
+For WPF layouting overrides, the methods perform 3 steps:
+1) make trace entry marking the start of the WPF layouting override
+2) execute the WPF layouting override
+1) make trace entry marking the completion of the WPF layouting override
+
+License
+-------
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
+<http://creativecommons.org/publicdomain/zero/1.0/>). 
+
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
+using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -33,7 +66,6 @@ namespace WpfTestbench {
     /// </summary>
     public bool IsTracing { get; set; }
   }
-
 
 
   /// <summary>
@@ -295,8 +327,6 @@ namespace WpfTestbench {
       if (!IsTracingOn) return;
 
       if (isFiltered(objectName, e.Property.Name)) return;
-////YLegend.MinValue=-200
-//if (objectName=="YLegend" && e.Property.Name=="MinValue" && e.NewValue!=null && e.NewValue.ToString()=="-200") System.Diagnostics.Debugger.Break();
       traceIndent();
       lineStringBuilder.Append(objectName);
       lineStringBuilder.Append('.');

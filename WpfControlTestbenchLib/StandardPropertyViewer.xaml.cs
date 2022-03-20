@@ -1,20 +1,27 @@
-﻿/**************************************************************************************
+﻿/********************************************************************************************************
 
 WpfTestbench.StandardPropertyViewer
 ===================================
 
 Displays a property grid for a control (TestFrameworkElement) inheriting from FrameworkElement and possibly Control.
 
-Written 2014-2020 by Jürgpeter Huber 
-Contact: PeterCode at Peterbox dot com
+License
+-------
 
-To the extent possible under law, the author(s) have dedicated all copyright and 
-related and neighboring rights to this software to the public domain worldwide under
-the Creative Commons 0 license (details see COPYING.txt file, see also
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
 <http://creativecommons.org/publicdomain/zero/1.0/>). 
 
-This software is distributed without any warranty. 
-**************************************************************************************/
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
 using System;
 using System.ComponentModel;
 using System.Text;
@@ -22,7 +29,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml;
 
@@ -33,41 +39,6 @@ namespace WpfTestbench {
   /// Displays a property grid for a control (TestFrameworkElement) inheriting from FrameworkElement and possibly Control.
   /// </summary>
   public partial class StandardPropertyViewer: UserControl {
-
-    //#region Properties
-    ////      ----------
-
-    ///// <summary>
-    ///// FrameworkElement for which properties values like margin get displayed. If TestFrameworkElement inherits from a Control,
-    ///// also font related properties get displayed.
-    ///// </summary>
-    //public FrameworkElement? TestFrameworkElement {
-    //  get { return (FrameworkElement?)GetValue(TestFrameworkElementProperty); }
-    //  set { SetValue(TestFrameworkElementProperty, value); }
-    //}
-
-    ///// <summary>
-    ///// Dependency Property definition for TestFrameworkElement
-    ///// </summary>
-    //public static readonly DependencyProperty TestFrameworkElementProperty = 
-    //DependencyProperty.Register("TestFrameworkElement", typeof(FrameworkElement), typeof(StandardPropertyViewer), 
-    //  new UIPropertyMetadata(null, testFrameworkElement_Changed));
-
-
-    //private static void testFrameworkElement_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-    //  if (e.OldValue!=null) throw new NotSupportedException("It is not possible to initialise TestFrameworkElement twice.");
-
-    //  StandardPropertyViewer standardPropertyViewer = (StandardPropertyViewer)d;
-    //  //StandardPropertyViewer needs to add some Lines to the host container of TestFrameworkElement, which is supposed to be a Grid.
-    //  //When defined in XAML, the TestFrameworkElement property of StandardPropertyViewer gets set before TestFrameworkElement gets added
-    //  //to the grid. For this reason, we have to delay the setup(), if StandardPropertyViewer is not loaded yet.
-    //  if (standardPropertyViewer.IsLoaded) {
-    //    FrameworkElement testFrameworkElement = (FrameworkElement)e.NewValue;
-    //    standardPropertyViewer.setup(testFrameworkElement);
-    //  }
-    //}
-    //#endregion
-
 
     #region Constructor
     //      -----------
@@ -656,6 +627,5 @@ namespace WpfTestbench {
       WpfBinding.Setup(BorderColorComboBox, "SelectedColorBrush", testFrameworkElement, Control.BorderBrushProperty, BindingMode.TwoWay);
     }
     #endregion
-
   }
 }

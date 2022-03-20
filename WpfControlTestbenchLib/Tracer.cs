@@ -1,26 +1,38 @@
-﻿//==========================================================================================================================================
-// Copyright: Peter Huber, Singapore, 2014
-// This code is contributed to the Public Domain. You might use it freely for any purpose, commercial or non-commercial. It is provided 
-// "as-is." The author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, the code is 
-// fit for your purpose and does not infringe on other copyrights. Use this code only if you agree with these conditions. The entire risk of 
-// using it lays with you :-)
-//==========================================================================================================================================
+﻿/********************************************************************************************************
 
+WpfTestbench.Tracer
+===================
 
-/*******************************************************************************************************************************************
-Use Tracer to trace messages, warnings, errors and exceptions from various threads. The messages get collected multi-threading
-safe in messageQueue without any blocking (only microseconds delay). A low priority thread empties messageQueue into messageBuffer and raises the 
-MessagesRaised event
+Use Tracer to trace messages, warnings, errors and exceptions from various threads. The messages get 
+collected multi-threading safe in messageQueue without any blocking (only microseconds delay). A low 
+priority thread empties messageQueue into messageBuffer and raises the MessagesRaised event
  
-         lock===============+  lock==============+
-Trace()--->|                |  |                 |->raise event MessagesRaised
-Warning()->|->messageQueue->|->|->messageBuffer->|->GetTrace()
-Error()--->|        v             
-Exception->|        +----->Pulse tracerThread
+          lock===============+   lock==========+
+Trace()---->|                |   |             |-->raise event MessagesRaised
+Warning()-->|->messageQueue->|-->|messageBuffer|     GetTrace()
+Error()---->|        v             
+Exception-->|        +----->Pulse tracerThread
 
-tracerThread is a background thread, meaning the application can stop without explicitely stopping tracerThread. To shut down nicely, 
-StopThread() should be used
-*******************************************************************************************************************************************/
+tracerThread is a background thread, meaning the application can stop without explicitely stopping 
+tracerThread. To shut down nicely, StopThread() should be used
+
+License
+-------
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
+<http://creativecommons.org/publicdomain/zero/1.0/>). 
+
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
 
 
 //// In TimerMode, the trace is copied to the trace thread for further processing every millisends. Collectine messages and
@@ -36,11 +48,8 @@ StopThread() should be used
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Threading;
 
 
 namespace WpfTestbench {
@@ -241,8 +250,6 @@ namespace WpfTestbench {
     /// Event gets raised when a message get traced.
     /// </summary>
     public static event Action<TraceMessage[]>? MessagesTraced;
-
-
     #endregion
 
 
@@ -286,7 +293,7 @@ namespace WpfTestbench {
     #region Multithreaded Queue
     //      -------------------
 
-    static readonly Queue<TraceMessage> messagesQueue = new Queue<TraceMessage>(MaxMessageQueue);
+    static readonly Queue<TraceMessage> messagesQueue = new(MaxMessageQueue);
     static bool isMessagesQueueOverflow;
 
 
@@ -294,7 +301,7 @@ namespace WpfTestbench {
       #if RealTimeTraceing
         RealTimeTracer.Trace("enqueueMessage(): start " + traceType.ShortString() + ": " + threadMessageBuffer);
       #endif
-      TraceMessage message = new TraceMessage(traceType, threadMessageBuffer!, filterText);
+      var message = new TraceMessage(traceType, threadMessageBuffer!, filterText);
       threadMessageBuffer = null;
 
       //break in debugger if needed
@@ -347,7 +354,7 @@ namespace WpfTestbench {
     //      -----------------
 
     //storage of all messages. Other threads can get a copy with GetTrace()
-    static readonly Queue<TraceMessage> messageBuffer = new Queue<TraceMessage>(MaxMessageBuffer);
+    static readonly Queue<TraceMessage> messageBuffer = new(MaxMessageBuffer);
 
 
     static volatile bool isDoTracing = true;
@@ -355,7 +362,7 @@ namespace WpfTestbench {
 
 
     private static Timer createTracerTimer() {
-      Timer newTimer = new Timer(tracerTimerMethod);
+      var newTimer = new Timer(tracerTimerMethod);
       newTimer.Change(TimerIntervallMilliseconds, TimerIntervallMilliseconds);
       return newTimer;
     }
@@ -461,7 +468,6 @@ namespace WpfTestbench {
         RealTimeTracer.Trace("TracerTimer: Exception !!!: " + ex.Message);
 #endif
         ShowExceptionInDebugger(ex);
-//        Console.WriteLine("Error in tracerThread." + ex.ToDetailString());
       }
 #if RealTimeTraceing
         RealTimeTracer.Trace("TracerTimer: completed");
@@ -551,5 +557,4 @@ namespace WpfTestbench {
 
     #endregion
   }
-
 }

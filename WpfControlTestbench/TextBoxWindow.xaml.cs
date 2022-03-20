@@ -1,23 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/********************************************************************************************************
+
+WpfTestbench.TextBoxWindow
+==========================
+
+Test window for TextBoxTraced.
+
+License
+-------
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
+<http://creativecommons.org/publicdomain/zero/1.0/>). 
+
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 
 namespace WpfTestbench {
+
   /// <summary>
   /// Interaction logic for TextBoxWindow.xaml
   /// </summary>
   public partial class TextBoxWindow: Window {
+
+    #region Constructor
+    //      -----------
 
     /// <summary>
     /// Creates and displays a Testbench Window to test TextBox
@@ -157,7 +176,11 @@ the contents of the text box to reflect the specified alignment.
 This property has a higher precedence than the HorizontalContentAlignment property.""
 ";
     }
+    #endregion
 
+
+    #region Event Handler
+    //      -------------
 
     private void LineUpButton_Click(object sender, RoutedEventArgs e) {
       TestTextBoxTraced.LineUp();
@@ -252,5 +275,6 @@ This property has a higher precedence than the HorizontalContentAlignment proper
     void ClearButton_Click(object sender, RoutedEventArgs e) {
       TestTextBoxTraced.Clear();
     }
+    #endregion
   }
 }

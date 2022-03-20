@@ -1,4 +1,28 @@
-﻿using System.Reflection;
+﻿/********************************************************************************************************
+
+WpfTestbench.StandardColorComboBox
+==================================
+
+Displays all the colors defined in Colors in a ComboBox
+
+License
+-------
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
+<http://creativecommons.org/publicdomain/zero/1.0/>). 
+
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -6,6 +30,7 @@ using System.Windows.Shapes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace WpfTestbench {
 
@@ -137,44 +162,16 @@ namespace WpfTestbench {
         SelectedIndex = 0;
       }
     }
-
-
-    ///////// <summary>
-    ///////// Can be used to set dfault colour from XAML
-    ///////// </summary>
-    //////public string SelectedColorName {
-    //////  get { return (string)GetValue(SelectedColorNameProperty); }
-    //////  set {
-    //////    string valueLowercase = value.ToLowerInvariant();
-    //////    for (int sampleIndex = 0; sampleIndex < Items.Count; sampleIndex++) {
-    //////      var colorSamplePanel = (ColorSamplePanel)Items[sampleIndex];
-    //////      if (colorSamplePanel.ColorName.ToLowerInvariant()==valueLowercase) {
-    //////        SelectedIndex = sampleIndex;
-    //////        SetValue(SelectedColorNameProperty, colorSamplePanel.ColorName); 
-    //////        return;
-    //////      }
-    //////    }
-    //////    throw new Exception("Unknown ColorName: " + value + ".");
-    //////  }
-    //////}
-
-
-    //////public static readonly DependencyProperty SelectedColorNameProperty = 
-    //////DependencyProperty.Register("SelectedColorName", typeof(string), typeof(ColorSamplePanel), new FrameworkPropertyMetadata("Green"));
     #endregion
 
 
     #region Constructor
     //      -----------
+  
     public StandardColorComboBox() {
-      //foreach (PropertyInfo brushPropertyInfo in typeof(Brushes).GetProperties()) {
-      //  SolidColorBrush brush = (SolidColorBrush)brushPropertyInfo.GetValue(null, null);
-      //  Items.Add(new ColorSamplePanel(brushPropertyInfo.Name, brush));
-      //}
       foreach (var coloritem in colorItems) {
         Items.Add(new ColorSamplePanel(coloritem.Name, coloritem.Brush));
       }
-      //////      TextSearch.SetTextPath(this, "ColorName");
       SelectedValuePath = "ColorBrush";
       SelectionChanged += StandardColorComboBox_SelectionChanged;
     }
@@ -186,43 +183,11 @@ namespace WpfTestbench {
 
     void StandardColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
       if (e.AddedItems.Count>0) {
-        var colorSamplePanel = (ColorSamplePanel)e.AddedItems[0];
+        var colorSamplePanel = (ColorSamplePanel)e.AddedItems[0]!;
         SelectedColorBrush = colorSamplePanel.ColorBrush;
-        //////SetValue(SelectedColorNameProperty, colorSamplePanel.ColorName);
       }
     }
     #endregion
-
-    /////// <summary>
-    /////// StandardColorComboBox supports only standard colors. SetClosestColour takes as input any color and
-    /////// sets the closest standard color
-    /////// </summary>
-    ////public Color SetClosestStandardColour(Brush setColorBrush) {
-    ////  SolidColorBrush setSolidColorBrush = setColorBrush as SolidColorBrush;
-    ////  if (setSolidColorBrush==null) return Colors.DarkRed;
-
-    ////  Color setColor = setSolidColorBrush.Color;
-    ////  foreach (ColorSamplePanel item in Items) {
-    ////    SolidColorBrush sampleSolidColorBrush = item.ColorBrush as SolidColorBrush;
-    ////    SolidColorBrush foundSolidColorBrush = null;
-    ////    int minSquareDiff = int.MaxValue;
-    ////    if (sampleSolidColorBrush!=null) {
-    ////      if (sampleSolidColorBrush.Color==setSolidColorBrush.Color) {
-    ////        foundSolidColorBrush = sampleSolidColorBrush;
-    ////        break;
-    ////      }
-    ////      Color c1 = sampleSolidColorBrush.Color;
-    ////      Color c2 = setSolidColorBrush.Color;
-    ////      int squareDiff = square(c1.R-c2.R) + square(c1.G-c2.G) + square(c1.B-c2.B);
-    ////      if (minSquareDiff>squareDiff) {
-    ////        minSquareDiff = squareDiff;
-    ////        foundSolidColorBrush = sampleSolidColorBrush;
-    ////      }
-    ////    }
-
-    ////  }
-    ////  return setColor;
-    ////}
   }
   #endregion
 
@@ -237,22 +202,20 @@ namespace WpfTestbench {
 
     public string ColorName {get;}
     public Brush ColorBrush {get;}
-
-    readonly Rectangle colorRectangle;
-    readonly TextBlock textBlock;
     #endregion
 
 
     #region Constructor
     //      -----------
 
+    readonly Rectangle colorRectangle;
+    readonly TextBlock textBlock;
+
     public ColorSamplePanel(string colorName, Brush colorBrush) {
       ColorName = colorName;
       ColorBrush = colorBrush;
       Orientation = Orientation.Horizontal;
-      //TextSearch.SetText(this, colorName);
-
-      colorRectangle = new Rectangle {
+colorRectangle = new Rectangle {
         Fill = colorBrush,
         Margin = new Thickness(2, 0, 2, 0),
         VerticalAlignment = VerticalAlignment.Center

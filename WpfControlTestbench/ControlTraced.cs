@@ -1,25 +1,32 @@
-﻿/**************************************************************************************
+﻿/********************************************************************************************************
 
 WpfTestbench.StackPanelTraced
 =============================
 
 StackPanel with event tracing for TestBench.
 
-Written 2014 - 2020 by Jürgpeter Huber 
-Contact: PeterCode at Peterbox dot com
+License
+-------
 
-To the extent possible under law, the author(s) have dedicated all copyright and 
-related and neighboring rights to this software to the public domain worldwide under
-the Creative Commons 0 license (details see COPYING.txt file, see also
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
 <http://creativecommons.org/publicdomain/zero/1.0/>). 
 
-This software is distributed without any warranty. 
-**************************************************************************************/
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using WpfTestbench;
+
 
 namespace WpfTestbench {
 
@@ -171,7 +178,7 @@ namespace WpfTestbench {
     t |   +++++++++++++++++++++++++++++++++++++++++++++++|
       +--------------------------------------------------+
     */
-    static readonly Thickness emptyThickness = new Thickness(0);
+    static readonly Thickness emptyThickness = new(0);
 
 
     Typeface? typeface;
@@ -327,20 +334,12 @@ namespace WpfTestbench {
         throw new NotSupportedException();
       }
       double textOriginY = insideY;
-      switch (VerticalContentAlignment) {
-      case VerticalAlignment.Top:
-        textOriginY += FontSize;
-        break;
-      case VerticalAlignment.Center:
-      case VerticalAlignment.Stretch:
-        textOriginY += (insideHeight+FontSize)/2;
-        break;
-      case VerticalAlignment.Bottom:
-        textOriginY += insideHeight;
-        break;
-      default:
-        throw new NotSupportedException();
-      }
+      textOriginY +=VerticalContentAlignment switch {
+        VerticalAlignment.Top => FontSize,
+        VerticalAlignment.Center or VerticalAlignment.Stretch => (insideHeight+FontSize)/2,
+        VerticalAlignment.Bottom => insideHeight,
+        _ => throw new NotSupportedException(),
+      };
       if (hasTextFontChanged  || origin.X!=textOriginX || origin.Y!=textOriginY || 
         pixelsPerDip!=pixelsPerDipNew) 
       {

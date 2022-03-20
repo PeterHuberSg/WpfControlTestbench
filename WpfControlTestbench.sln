@@ -7,13 +7,32 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfControlTestbenchLib", "W
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BF01CB05-6AA8-4941-AE94-B95995F5196C}"
 	ProjectSection(SolutionItems) = preProject
-		LayoutLines.PNG = LayoutLines.PNG
-		Overview.PNG = Overview.PNG
+		cc-logo.jpg = cc-logo.jpg
+		ColorProperties.png = ColorProperties.png
+		ColorPropertiesOriginal.png = ColorPropertiesOriginal.png
+		ContainerMenu.pdn = ContainerMenu.pdn
+		ContainerMenu.png = ContainerMenu.png
+		EventViewer.png = EventViewer.png
+		License CC0.html = License CC0.html
+		Lines.png = Lines.png
+		LinesOriginal.png = LinesOriginal.png
+		MainWindow.png = MainWindow.png
+		MainWindowOriginal.png = MainWindowOriginal.png
+		PropertiesOriginal.png = PropertiesOriginal.png
 		ReadMe.md = ReadMe.md
-		TestbenchWindowXaml.docx = TestbenchWindowXaml.docx
-		TestbenchWindowXaml.PNG = TestbenchWindowXaml.PNG
-		TestStackPanel.PNG = TestStackPanel.PNG
+		SizeProperties.png = SizeProperties.png
+		SizePropertiesOriginal.png = SizePropertiesOriginal.png
+		Test.png = Test.png
+		TestOriginal.png = TestOriginal.png
+		TestWindowXaml.png = TestWindowXaml.png
+		TestWindowXamlOriginal.pdn = TestWindowXamlOriginal.pdn
+		TestWindowXamlOriginal.png = TestWindowXamlOriginal.png
+		WpfControlTestbench.docx = WpfControlTestbench.docx
+		WpfControlTestbench.png = WpfControlTestbench.png
 		WpfControlTestbench.pptx = WpfControlTestbench.pptx
+		WpfControlTestbench_Orginal.png = WpfControlTestbench_Orginal.png
+		WpfControlTestbenchColored.pdn = WpfControlTestbenchColored.pdn
+		WpfControlTestbenchColored.png = WpfControlTestbenchColored.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfControlTestbench", "WpfControlTestbench\WpfControlTestbench.csproj", "{2F78E1A6-9BEE-4F35-9A7D-CF13BD46EE5C}"

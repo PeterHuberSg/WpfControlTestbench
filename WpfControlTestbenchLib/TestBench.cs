@@ -1,4 +1,50 @@
-﻿using System;
+﻿/********************************************************************************************************
+
+WpfTestbench.TestBench
+======================
+
+To be placed into a test Window, holds the TestControl and controls to change the TestControl's 
+properties. Can be used like this:
+    xmlns:TBLib="clr-namespace:WpfTestbench;assembly=WpfControlTestbenchLib"
+
+    <TBLib:TestBench>
+      <TBLib:TestBench.TestProperties>
+        place a Grid or ... here which holds controls for changing the values of the TestControl
+        it will appear at the top of the TestBench
+      </TBLib:TestBench.TestProperties>
+
+      <TBLib:TestBench.TestControl>
+        Place the control he which you want to test. It appears at the bottom left corner of Testbench.
+      </TBLib:TestBench.TestControl>
+    </TBLib:TestBench>
+
+    +-----------------------+ 
+    |TestProperties         |
+    +-----------------------+
+    |StandardPropertyViewer |
+    +-----------+-----------+ 
+    |TestControl|Event Trace|
+    +-----------+-----------+
+
+
+License
+-------
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
+<http://creativecommons.org/publicdomain/zero/1.0/>). 
+
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,14 +56,16 @@ using System.Windows.Shapes;
 
 namespace WpfTestbench {
 
-
+  /// <summary>
+  /// WPF Control used in a test window to display a control to be tested 
+  /// </summary>
   public class TestBench: Control {
 
     #region Properties
     //      ----------
 
     /// <summary>
-    /// A control inheriting from FrameworkElement to be inspected in WpfControlTestbench. This property is mainly
+    /// A control inheriting from FrameworkElement to be inspected in TestBench. This property is mainly
     /// used by XAML and gets set exactly once after the TestBench contructor has executed. Changing its value after
     /// the initial setting throws an exception.
     /// </summary>
@@ -25,6 +73,7 @@ namespace WpfTestbench {
       get { return (FrameworkElement)GetValue(TestControlProperty); }
       set { SetValue(TestControlProperty, value); }
     }
+
     /// <summary>
     /// Dependency Property definition for TestControl
     /// </summary>
@@ -62,6 +111,7 @@ namespace WpfTestbench {
       get { return (FrameworkElement)GetValue(TestPropertiesProperty); }
       set { SetValue(TestPropertiesProperty, value); }
     }
+
     /// <summary>
     /// Dependency Property definition for TestProperties
     /// </summary>
@@ -105,7 +155,7 @@ namespace WpfTestbench {
     ///   };
     /// }
     /// ]]></example>
-    public List<(string Name, Func<Action?> Function)> TestFunctions;
+    public readonly List<(string Name, Func<Action?> Function)> TestFunctions;
 
 
     /// <summary>
@@ -210,6 +260,8 @@ namespace WpfTestbench {
       wpfTraceViewer = new WpfTraceViewer {MinWidth=300};
       innerGrid.Children.Add(wpfTraceViewer);
       Grid.SetColumn(wpfTraceViewer, 2);//row = 0
+
+      TestFunctions = new List<(string Name, Func<Action?> Function)>();
 
       Loaded += TestBench_Loaded;
     }
@@ -491,30 +543,6 @@ namespace WpfTestbench {
 
       if (!hasHeightChanged&&!hasWidthChanged) return;
 
-      //if (testControl==null) {
-      //  if (hasHeightChanged) {
-      //    TracerLib.Tracer.TraceLineFiltered("Height:{0}, Alignment:{1}, Margin:{2}, {3} Offset:{4}, AHeight: {5}", 
-      //      testFrameworkElement.Height, testFrameworkElement.VerticalAlignment, testFrameworkElement.Margin.Top, testFrameworkElement.Margin.Bottom, 
-      //      offsetPointUsed.Y, testFrameworkElement.ActualHeight);
-      //  }
-      //  if (hasWidthChanged) {
-      //    TracerLib.Tracer.TraceLineFiltered("Width:{0}, Alignment:{1}, Margin:{2}, {3} Offset:{4}, AWidth: {5}", 
-      //      testFrameworkElement.Width, testFrameworkElement.HorizontalAlignment, testFrameworkElement.Margin.Left, testFrameworkElement.Margin.Right, 
-      //      offsetPointUsed.X, testFrameworkElement.ActualWidth);
-      //  }
-      //} else {
-      //  if (hasHeightChanged) {
-      //    TracerLib.Tracer.TraceLineFiltered("Height:{0}, Alignment:{1}, Margin:{2}, {3} Offset:{4}, AHeight: {5}", 
-      //      testFrameworkElement.Height, testFrameworkElement.VerticalAlignment, testFrameworkElement.Margin.Top, testFrameworkElement.Margin.Bottom, 
-      //      offsetPointUsed.Y, testFrameworkElement.ActualHeight);
-      //  }
-      //  if (hasWidthChanged) {
-      //    TracerLib.Tracer.TraceLineFiltered("Width:{0}, Alignment:{1}, Margin:{2}, {3} Offset:{4}, AWidth: {5}", 
-      //      testFrameworkElement.Width, testFrameworkElement.HorizontalAlignment, testFrameworkElement.Margin.Left, testFrameworkElement.Margin.Right, 
-      //      offsetPointUsed.X, testFrameworkElement.ActualWidth);
-      //  }
-      //}
-
       foreach (AxisLine axisLine in axisLines) {
         if (axisLine!=null) {
           if ((axisLine.Dimension==DimensionEnum.width && hasWidthChanged) ||
@@ -560,9 +588,11 @@ namespace WpfTestbench {
       verticalAlignmentDescriptor.AddValueChanged(TestControl, TestControl_VerticalAlignmentChanged);
     }
 
+
     private void TestControl_SizeChanged(object sender, SizeChangedEventArgs e) {
       updateOrigineShadowPosition();
     }
+
 
     void TestControl_HorizontalAlignmentChanged(object? sender, EventArgs args) {
       updateOrigineShadowPosition();
@@ -614,9 +644,9 @@ namespace WpfTestbench {
     const bool CoT = true; //is test only for Control ?
     const bool FeT = true; //is test for FrameworkElement and Control ?
 
+
     private void initTestFunctions() {
       bool isCo = TestControl is Control;
-      TestFunctions = new List<(string Name, Func<Action?> Function)>();
       var tf = TestFunctions;
       var control = TestControl as Control;
       if (control is not null) {
@@ -651,7 +681,6 @@ namespace WpfTestbench {
           return null; 
         }));
       }
-      //Todo: Correct spacing
       //     Width     Horizo ntal  Vertical  Left        Right       Top         Bottom      Text         Font
       //         Height Contr Conte Cntr Cnte Mar Bor Pad Pad Bor Mar Mar Bor Pad Pad Bor Mar 
       addTest(nan, nan, hstr, hstr, vst, vst,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, arial, 12, isCo, FeT, "Layouting");
@@ -876,7 +905,12 @@ namespace WpfTestbench {
       }
       var testInfo = TestFunctions[testFuncsIndex];
       if (!string.IsNullOrEmpty(testInfo.Name)) {
-        Tracer.TraceLine("Test: " + testInfo.Name);
+        try {//if testResultAction reports an error, it will only be detected when writing next trace.
+          Tracer.IsBreakOnError = false;
+          Tracer.TraceLine("Test: " + testInfo.Name);
+        } finally {
+          Tracer.IsBreakOnError = true;
+        }
       }
       testResultAction = TestFunctions[testFuncsIndex].Function();
       standardPropertyViewer.TestTextBox.Visibility = Visibility.Visible;
@@ -1003,7 +1037,9 @@ namespace WpfTestbench {
     #region Visual and Logical Tree
     //      -----------------------
 
-    //Provides access to the logical children(Logical tree)
+    /// <summary>
+    /// Provides access to the logical children(Logical tree)
+    /// </summary>
     protected override IEnumerator LogicalChildren {
       get {
         return children.GetEnumerator();

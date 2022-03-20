@@ -1,10 +1,32 @@
-﻿using System;
+﻿/********************************************************************************************************
+
+WpfTestbench.WpfTraceViewer
+===========================
+
+Control displaying the tracing information in the TestBench
+
+License
+-------
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
+<http://creativecommons.org/publicdomain/zero/1.0/>). 
+
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
+********************************************************************************************************/
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -12,6 +34,10 @@ using System.Windows.Threading;
 
 namespace WpfTestbench {
 
+
+  /// <summary>
+  /// Control displaying the tracing information in the TestBench
+  /// </summary>
   public class WpfTraceViewer: DockPanel {
 
     #region Properties
@@ -49,18 +75,14 @@ namespace WpfTestbench {
       Tracer.MessagesTraced += Tracer_MessagesTraced;
     }
 
+
     readonly DockPanel buttonDockPanel;
     readonly TextBox traceTextBox;
    
 
-    DateTime traceDateTime;
-    static readonly string[] lineSeparator = new string[] { Environment.NewLine };
-
-
     private void initTraceTextBox() {
       lines.Clear();
       traceTextBox.Text = "";
-      traceDateTime = DateTime.MaxValue; //This prevents that right at the beginning an empty line gets added
     }
 
 
@@ -126,7 +148,7 @@ namespace WpfTestbench {
     #region Events
     //      ------
 
-    void WpfTraceViewer_Loaded(object sender, RoutedEventArgs e) {
+    private void WpfTraceViewer_Loaded(object sender, RoutedEventArgs e) {
       Window parentWindow = Window.GetWindow(this);
       if (parentWindow!=null) {
         parentWindow.Activated += new EventHandler(parentWindow_Activated);
@@ -134,7 +156,7 @@ namespace WpfTestbench {
     }
 
 
-    void parentWindow_Activated(object? sender, EventArgs e) {
+    private void parentWindow_Activated(object? sender, EventArgs e) {
       setTraceAction(addTraceLine);
     }
 
@@ -155,7 +177,7 @@ namespace WpfTestbench {
     }
 
 
-    static void Tracer_MessagesTracedOnWpfThread(TraceMessage[] traceMessages) {
+    private static void Tracer_MessagesTracedOnWpfThread(TraceMessage[] traceMessages) {
       if (traceAction==null) {
         foreach (TraceMessage traceMessage in traceMessages) {
           WpfTraceViewer.staticTraceMessages.Add(traceMessage);
@@ -166,12 +188,12 @@ namespace WpfTestbench {
     }
 
 
-    void copyAllButton_Click(object sender, RoutedEventArgs e) {
+    private void copyAllButton_Click(object sender, RoutedEventArgs e) {
       Clipboard.SetText(traceTextBox.Text);
     }
 
 
-    void clearAllButton_Click(object sender, RoutedEventArgs e) {
+    private void clearAllButton_Click(object sender, RoutedEventArgs e) {
       initTraceTextBox();
     }
 
@@ -179,7 +201,7 @@ namespace WpfTestbench {
     bool isRunning = true;
 
 
-    void stopContinueButton_Click(object sender, RoutedEventArgs e) {
+    private void stopContinueButton_Click(object sender, RoutedEventArgs e) {
       Button stopContinueButton = (Button)sender;
       stopContinueButton.Content =isRunning ? "Continue" : "Stop";
       isRunning = !isRunning;
@@ -236,6 +258,5 @@ namespace WpfTestbench {
       traceTextBox.ScrollToEnd();
     }
     #endregion
-
   }
 }

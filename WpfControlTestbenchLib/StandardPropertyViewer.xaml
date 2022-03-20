@@ -4,16 +4,22 @@ WpfTestbench.StandardPropertyViewer
 ===================================
 
 Displays some properties of a control inheriting from FrameworkElement and possibly Control
-  
-Written 2014-2020 by Jürgpeter Huber 
-Contact: PeterCode at Peterbox dot com
 
-To the extent possible under law, the author(s) have dedicated all copyright and 
-related and neighboring rights to this software to the public domain worldwide under
-the Creative Commons 0 license (details see COPYING.txt file, see also
+License:
+
+To the extent possible under law, the author(s) have dedicated all copyright and related and 
+neighboring rights to this software to the public domain worldwide under the Creative Commons 0 license 
+(relevant legal text see License CC0.html file, also 
 <http://creativecommons.org/publicdomain/zero/1.0/>). 
 
-This software is distributed without any warranty. 
+You might use it freely for any purpose, commercial or non-commercial. It is provided "as-is." The 
+author gives no warranty of any kind whatsoever. It is up to you to ensure that there are no defects, 
+that the code is fit for your purpose and does not infringe on other copyrights. Use this code only if 
+you agree with these conditions. The entire risk of using the code lays with you :-)
+
+Written 2014-2022 in Switzerland & Singapore by Jürgpeter Huber 
+
+Contact: https://github.com/PeterHuberSg/WpfControlTestbench
 ************************************************************************************-->
 <UserControl x:Class="WpfTestbench.StandardPropertyViewer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -124,7 +130,6 @@ This software is distributed without any warranty.
     <TextBox   Grid.Row="2" Grid.Column="12" Name="DesiredWidthTextBox" IsReadOnly="True" IsEnabled="False"/>
     <TextBox   Grid.Row="2" Grid.Column="13" Name="RenderWidthTextBox" IsReadOnly="True" IsEnabled="False"/>
     <WpfTestbench:StandardColorComboBox Grid.Row="2" Grid.Column="15" x:Name="BorderColorComboBox"/>
-    <!--<ComboBox Grid.Row="2" Grid.Column="16" Name="FontFamilyComboBox"/> further down, because too many lines-->
     <ComboBox  Grid.Row="2" Grid.Column="17" Name="FontSizeComboBox" HorizontalContentAlignment="Right"/>
     <ComboBox  Grid.Row="2" Grid.Column="18" Name="FontWeightComboBox" HorizontalContentAlignment="Right"/>
     <Button    Grid.Row="2" Grid.Column="20" Name="PreviousTestButton" Content="_Previous" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0,5,0"/>
