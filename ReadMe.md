@@ -37,26 +37,26 @@ also investigate the properties specific to your control.
 ![ContainerMenu](ContainerMenu.png)
  
 Controls behave differently depending on who is their `Parent` in the logic 
-tree, i.e. into which WPF `ContentControl` they are placed. A `Canvas` might 
-give all the space your control wants, while a `StackPanel` will limit how 
-wide or tall your control can be. To get this interaction between different 
-WPF `ContentControls` and your control work properly can be rather 
-challenging. Luckily, `WpfControlTestbench` makes it very easy to place your 
-control into different `ContentControls` at runtime.
+tree, i.e. into which WPF `ContentControl` or `Panel` they are placed. A 
+`Canvas` might give all the space your control wants, while a `StackPanel` 
+will limit how wide or tall your control can be. To get this interaction 
+between different WPF `ContentControls` and your control work properly 
+can be rather challenging. Luckily, `WpfControlTestbench` makes it very 
+easy to place your control into different `ContentControls` at runtime.
 
 ## Debugging Measurement, Arrangement and Rendering problems
 It is a kind of black magic to write a WPF `Control` which renders directly to 
 the screen, but it offers great flexibility and the highest possible speed. 
 Debugging it is difficult with Visual Studio because breakpoints cannot be 
 used, they get constantly fired as soon VS tries to switch to your window, 
-which then calls your methods, which stops at that break point and shows VS 
+which then calls your methods, which stops at that breakpoint and shows VS 
 again. You could use `System.Diagnostics.Debug.WriteLine()` to trace that 
 information, however that can be a lot of work and you can't do that for the 
 parent. But it's often the interplay with the parent which causes the 
 problem. But fear not, `WpfControlTestbench` can trace all of this information 
 for you and much more.
 
-![EventViewer](EventViewer.png)
+![EventViewer1](EventViewer1.png)
 
 In the picture above, you can see CanvasContainer, which is the parent of 
 the `Control` to be tested, called StackPanel. The parent gets 877 horizontal 
@@ -87,19 +87,19 @@ Required Width = LeftMargin + LeftBorder + LeftPadding + Content Width + RightPa
 Of course, required width is often different from the width that the host can provide. 
 
 - What happens when there is too little space ? Too much space ?
-- What happens if the Width property gets set (notice that it is not part of the formula above) ? 
-- What happens if Width is undefined ? 
-- What happens if HorizontalAlignment changes from left to center, right or stretch ?
-- What happens when the Font.Size changes ?
-- Does the host or your control handle Margin ? Padding ?
+- What happens if the `Width` property gets set (notice that it is not part of the formula above) ? 
+- What happens if `Width` is undefined ? 
+- What happens if `HorizontalAlignment` changes from `Left` to `Center`, `Right` or `Stretch` ?
+- What happens when the `Font.Size` changes ?
+- Does the parent or your control handle `Margin` ? `Padding` ?
 
 **Answers:** 
-- Too little space: If your control renders outside the given space, it depends on clipping if that is shown or not. Too much space: Debence on alignment. If not stretched, parent(!) will place the content accordingly.
-- When width is set, your control is supposed to use that space. If alignment is stretched, no stretching should happen, but the parent will center your control. 
-- When Width is undefined, your control should figure out itself how much space it needs. 
-- Changing HorizontalAlignment from left to center or right does not matter for your control, the rendering is the same, but the parent will place it differently. Changing HorizontalAlignment from left or stretch will ask your control to render using all available size, not just the size it feels it should use.
-- When the Font.Size (or Font.Family or …) changes, the content of your control might need more or less space, i.e. Measure() and possibly Arrange() and Render() need to be executed.
-- The host or your control handles Margin. Your control needs to handle Border and Padding.
+- Too little space: If your control renders outside the given space, it depends on clipping if that is shown or not. Too much space: Depends on alignment. If not stretched, parent (!) will place the content accordingly. If streched, child should use all available space.
+- When `Width` is set, your control is supposed to use exactly that space. If alignment is stretched, no stretching should happen, but the parent will center your control. 
+- When `Width` is undefined, your control should figure out itself how much space it needs. 
+- Changing `HorizontalAlignment` from `Left` to `Center` or `Right` does not matter for your control, the rendering is the same, but the parent will place it differently. Changing `HorizontalAlignment` from `Left` to `Stretch` will ask your control to render using all available size, not just the size it feels it should use.
+- When the `Font.Size` (or `Font.Family` or …) changes, the content of your control might need more or less space, i.e. `Measure()`, `Arrange()` and `Render()` need to be executed.
+- The host of your control handles `Margin`. Your control needs to handle `Border` and `Padding`.
 
 Congratulations if you know the answers to all these questions. If not, 
 sadly you will hardly find the answers in Microsoft's documentation. But as 
@@ -109,8 +109,8 @@ this works.
 To get quickly answers to this kind of questions, use `WpfControlTestbench`, 
 change some values and see how a Microsoft control reacts. Then implement 
 the same behaviour for your control. Also helpful to better understand 
-Microsoft controls is the Show Template button in the TestBench which shows 
-the ControlTemplate XAML. If you really want to know details, you can also 
+Microsoft controls is the `Show Template` button in the `TestBench` which shows 
+the `ControlTemplate` XAML. If you really want to know details, you can also 
 check the WPF source code at https://github.com/dotnet/wpf. But be warned, 
 it can be complex.
 
@@ -121,7 +121,7 @@ It displays dashed lines for Margin, Border and Padding which can be moved
 with the mouse. Even the total available space can be easily changed with a 
 mouse drag of the splitter line.
  
-![Lines](Lines.png)
+![Lines1](Lines1.png)
 
 ## Testing Standard Properties
 You can also change properties by entering values with the keyboard, which 
@@ -157,7 +157,7 @@ through all these tests in a minute or two !
 
 ![Test](Test.png) 
 
-You just keep on clicking Next (Alt + N). Usually a quick glance tells you, 
+You just keep on clicking Next (Alt + N). Usually a quick glance tells you 
 if everything looks ok. Of course, you can also easily add your own tests 
 for the properties which are specific for your control, which is explained 
 in detail further down.
@@ -185,13 +185,13 @@ Only read this and the next chapter if you are interested in the nifty
 gritty details of how to write your own test window.
 
 When tracing the layouting process, one challenge is that it happens in the 
-Measure() and Arrange() methods. Since these are not events, it is not 
-possible for the TestBench to trace their execution. To make this possible, 
+`Measure()` and `Arrange()` methods. Since these are not events, it is not 
+possible for the `TestBench` to trace their execution. To make this possible, 
 you have to inherit a new class from your control and override methods like 
-MeasureOverride(). 
+`MeasureOverride()`. 
 
 That new class needs to implement the simple `WpfControlTestbench` interface  
-ITraceName or IIsTracing to support tracing:
+`ITraceName` or `IIsTracing` to support tracing:
 
 ```C#
     /// <summary>
@@ -222,10 +222,10 @@ There was a difficult problem to solve for tracing. The trace should show
 where the construction of your control starts, then which properties get set 
 and finally a trace showing the control construction is completed. The 
 challenge here is how do you write a trace before the constructor is executing ? 
-Like in the example of StackPanel, there is no way to add a trace instruction 
+Like in the example of `StackPanel`, there is no way to add a trace instruction 
 at the beginning of its constructor.  It also does not help to write the start 
 trace into a constructor of an inheriting class, since it only executes after 
-the StackPanel constructor has finished. The solution was to use the following 
+the `StackPanel` constructor has finished. The solution was to use the following 
 inheritance:
 
 YourControl => YourControlWithConstructor => YourControlTraced
@@ -255,15 +255,15 @@ In XAML you place your test control like this:
 This XAML creates a C# line calling the parameterless constructor of YourControlTraced, which calls the other constructors like this:
 
     1) YourControlTraced()
-      this("YourControl", true)
+      this("YourControl")
     
-    2) YourControlTraced(string traceName) : 
-        base(TraceWPFEvents.TraceCreateStart(traceName))
+      2) YourControlTraced(string traceName) : 
+         base(TraceWPFEvents.TraceCreateStart(traceName))
     	
-    3) YourControlWithConstructor(object? _) : 
-       base()
+         3) YourControlWithConstructor(object? _) : 
+             base()
 
-    4)YourControl ()
+             4)YourControl ()
 
 1)	Parameterless constructor of YourControlTraced calls the YourControlTraced 
     constructor with the parameter TraceName. Note that the WPF Name property cannot be used for tracing, because it gets its value assigned only after the constructor has completed.
@@ -414,7 +414,7 @@ You add lines like this to the constructor of your test window:
 ```C#
     TestBench.TestFunctions.Add(("Green Fill", fillGreen));
     TestBench.TestFunctions.Add(("Red Fill", ()=>{ TestControlTraced.Fill = Brushes.Red; return null;}));
-    TestBench.TestFunctions.Add(("Ratio", testRatio));
+    TestBench.TestFunctions.Add(("Width", testWidth));
     TestBench.TestFunctions.Add(("Reset Properties", resetProperties));
 ```
 
@@ -433,14 +433,14 @@ will get executed when the user presses the `NextButton` to execute the next
 text.
 
 ```C#
-    private Action? testRatio() {
+    private Action? testWidth() {
       oldWidth = TestControlTraced.Width;
       TestControlTraced.Width = 200;
-      return verifyRation;
+      return verifyWidth;
     }
 
 
-    private void verifyRation() {
+    private void verifyWidth() {
       if (double.IsNaN(TestControlTraced.Width)) return;
 
       if (TestControlTraced.ActualWidth==TestControlTraced.Width) {
@@ -452,7 +452,7 @@ text.
 
 A failed test gets shown in the EventTracer like this:
 
-    Trc 11:20:05.228 Test: Ratio
+    Trc 11:20:05.228 Test: Width
     Trc 11:20:05.228 Control.Width=200 
     …
     Trc 11:20:05.636 Control.ActualWidth=123
@@ -464,7 +464,7 @@ A failed test gets shown in the EventTracer like this:
     Data: System.Collections.ListDictionaryInternal
     Source: WpfControlTestbench
     HResult: -2146233079
-       at WpfTestbench.ControlWindow.verifyRation() in C:\Users\Peter\source\repos\WpfControlTestbench\WpfControlTestbench\ControlWindow.xaml.cs:line 98
+       at WpfTestbench.ControlWindow.verifyWidth() in C:\Users\Peter\source\repos\WpfControlTestbench\WpfControlTestbench\ControlWindow.xaml.cs:line 98
        at WpfTestbench.TestBench.nextTestButton_Click(Object sender, RoutedEventArgs e) in C:\Users\Peter\source\repos\WpfControlTestbench\WpfControlTestbenchLib\TestBench.cs:line 895
 
 It might be useful if the user can reset the property values which were changed 
@@ -496,4 +496,4 @@ My Github projects which might be interesting for you:
 - [WpfWindowsLib](https://github.com/PeterHuberSg/WpfWindowsLib): WPF Controls for data entry, detecting if required data is missing or data has been changed.
 - [TracerLib](https://github.com/PeterHuberSg/TracerLib): Part of it used in `WpfControlTestbench`. Fast tracing of exceptions, errors and infos in memory, some entries can be written by a background thread to a file. Great to document what happened just before an exception occured.
 - [StorageLib](https://github.com/PeterHuberSg/StorageLib): C# only library providing fast object oriented data storage in RAM and long term storage on local harddisk for single user applications. No database required.
-- [MasterGrab](https://github.com/PeterHuberSg/MasterGrab): MasterGrab is a WPF game where a human player plays against several computer players (=Robots). You can program your own Robot in C#.
+- [MasterGrab](https://github.com/PeterHuberSg/MasterGrab): MasterGrab is a WPF game where a human player plays against several computer players (=Robots). You can program your own Robot in C#. Since 6 years I play it every day. It takes just about 10 minutes. Perfect for warming up my brain before starting to program.
