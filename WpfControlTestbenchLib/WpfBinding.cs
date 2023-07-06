@@ -39,7 +39,7 @@ namespace WpfTestbench {
     /// </summary>
     public static BindingExpression Setup(
       object sourceObject, string sourcePath,
-      FrameworkElement targetFrameworkElement, DependencyProperty tragetDependencyProperty,
+      FrameworkElement targetFrameworkElement, DependencyProperty targetDependencyProperty,
       BindingMode bindingMode,
       IValueConverter? converter = null,
       string? stringFormat = null) 
@@ -50,7 +50,7 @@ namespace WpfTestbench {
         Converter = converter,
         StringFormat = stringFormat
       };
-      return (BindingExpression)targetFrameworkElement.SetBinding(tragetDependencyProperty, newBinding);
+      return (BindingExpression)targetFrameworkElement.SetBinding(targetDependencyProperty, newBinding);
     }
   }
 }

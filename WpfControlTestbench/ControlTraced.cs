@@ -274,7 +274,7 @@ namespace WpfTestbench {
         glyphIndexes = new ushort[Text.Length];
         advanceWidths = new double[Text.Length];
 
-        var glyphIndexesIdex = 0;
+        var glyphIndexesIndex = 0;
         for (int charIndex = 0; charIndex<Text.Length; charIndex++) {
           var codePoint = (int)Text[charIndex];
           if (codePoint<0xd800) {
@@ -282,13 +282,13 @@ namespace WpfTestbench {
           } else if (codePoint<0xdc00) {
             //high surrogate code point
             if (charIndex>=Text.Length) {
-              //low surrogate code pointmissing
+              //low surrogate code point missing
               System.Diagnostics.Debugger.Break();
               codePoint = (int)'?';
             } else {
               var lowCodPoint = (int)Text[++charIndex];
               if (lowCodPoint<0xdc00 || lowCodPoint>=0xe000) {
-                //illeagel second surrogate code point
+                //illegal second surrogate code point
                 System.Diagnostics.Debugger.Break();
                 codePoint = (int)'?';
               } else {
@@ -296,7 +296,7 @@ namespace WpfTestbench {
               }
             }
           } else if (codePoint<0xe000) {
-            //illeagel low surrogate code point, high should come first
+            //illegal low surrogate code point, high should come first
             System.Diagnostics.Debugger.Break();
             codePoint = (int)'?';
           } else {
@@ -306,13 +306,13 @@ namespace WpfTestbench {
           if (!glyphTypeface.CharacterToGlyphMap.TryGetValue(codePoint, out var glyphIndex)) {
             glyphIndex = glyphTypeface.CharacterToGlyphMap[(int)'?'];
           };
-          glyphIndexes[glyphIndexesIdex] = glyphIndex;
+          glyphIndexes[glyphIndexesIndex] = glyphIndex;
           double width = glyphTypeface.AdvanceWidths[glyphIndex] * FontSize;
-          advanceWidths[glyphIndexesIdex++] = width;
+          advanceWidths[glyphIndexesIndex++] = width;
           totalTextWidth += width;
         }
 
-        if (glyphIndexes.Length!=glyphIndexesIdex) {
+        if (glyphIndexes.Length!=glyphIndexesIndex) {
           glyphIndexes = glyphIndexes[0..glyphIndexes.Length];
           advanceWidths = advanceWidths[0..glyphIndexes.Length];
         }

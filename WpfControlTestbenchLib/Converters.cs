@@ -33,14 +33,12 @@ namespace WpfTestbench {
   //      ------------------------------
 
   /// <summary>
-  /// Converts between a double and string, converting any unparsable string to NAN.
+  /// Converts between a double and string, converting any unparseable string to NAN.
   /// </summary>
   public class DoubleNanConverter: IValueConverter {
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-      if (value==null) return null!;
-
-      return value.ToString()!;
+      return value==null ? null! : (object)value.ToString()!;
     }
 
 
@@ -64,7 +62,7 @@ namespace WpfTestbench {
   public class DoublePositiveConverter: IValueConverter {
 
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-      return value==null ? null : value.ToString();
+      return value?.ToString();
     }
 
 

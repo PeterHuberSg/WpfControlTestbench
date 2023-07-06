@@ -107,7 +107,7 @@ namespace WpfTestbench {
       CopyButton.Click += CopyButton_Click;
       CutButton.Click += CutButton_Click;
       PasteButton.Click += PasteButton_Click;
-      SelecteAllButton.Click += SelecteAllButton_Click;
+      SelecteAllButton.Click += SelectAllButton_Click;
       UndoButton.Click += UndoButton_Click;
       RedoButton.Click += RedoButton_Click;
       ScrollToHomeButton.Click += ScrollToHomeButton_Click;
@@ -121,7 +121,7 @@ It must have some long lines 012345678901234567890123456789012345678901234567890
 
 and many lines for vertical scrolling.
 
-To see the ScrollBars, set Horzontal SB and Vertical SB ComboBox.
+To see the ScrollBars, set Horizontal SB and Vertical SB ComboBox.
 
 Unfortunately, some selection related function cannot be demonstrated here properly, because clicking
 outside of the TextBox makes the selection disappear.
@@ -161,7 +161,7 @@ If the Height property is explicitly set on a TextBox, the MaxLines and MinLines
 ignored.""
 -----------------------------------------------------------------------------------------------------
 
-Help explains baddly the difference between HorizontalContentAlignment and TextAlignment:
+Help explains badly the difference between HorizontalContentAlignment and TextAlignment:
 ""HorizontalContentAlignment: In addition to Left, Right, and Center, you can set the 
 HorizontalContentAlignment property to Stretch, which stretches the child element to fill the 
 allocated space of the parent element. For more information, see Alignment, Margins, and Padding 
@@ -244,7 +244,7 @@ This property has a higher precedence than the HorizontalContentAlignment proper
       TestTextBoxTraced.Paste();
     }
 
-    private void SelecteAllButton_Click(object sender, RoutedEventArgs e) {
+    private void SelectAllButton_Click(object sender, RoutedEventArgs e) {
       TestTextBoxTraced.SelectAll();
     }
 

@@ -41,7 +41,7 @@ namespace WpfTestbench {
 		static public string ToDetailString(this Exception thisException){
 			var exceptionInfo = new StringBuilder();
 			int startPos;
-			int titelLength; 
+			int titleLength; 
 			
 			// Loop through all exceptions
 			Exception? currentException = thisException;	// Temp variable to hold InnerException object during the loop.
@@ -50,14 +50,14 @@ namespace WpfTestbench {
 				// exception type and message as title
 				startPos = exceptionInfo.Length;
 				exceptionInfo.Append(currentException.GetType().FullName);
-				titelLength = exceptionInfo.Length - startPos;
+				titleLength = exceptionInfo.Length - startPos;
 				exceptionInfo.Append("\r\n");
 				if (exceptionCount==1) {
 				    //main exception
-					exceptionInfo.Append('=', titelLength);
+					exceptionInfo.Append('=', titleLength);
 				} else {
 					//inner exceptions
-					exceptionInfo.Append('-', titelLength);
+					exceptionInfo.Append('-', titleLength);
 				}
 
         //if (currentException.GetType()==typeof(SqlException)) {

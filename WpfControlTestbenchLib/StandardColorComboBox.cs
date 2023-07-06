@@ -69,9 +69,7 @@ namespace WpfTestbench {
           //not black, gray or white
           int maxMinDif = max-min;
           if (max==color.R) {
-            #pragma warning disable IDE0045 // Convert to conditional expression
             if (color.G>=color.B) {
-            #pragma warning restore IDE0045
               hue = 60 * (color.G-color.B)/maxMinDif;
             } else {
               hue = 60 * (color.G-color.B)/maxMinDif + 360;
@@ -169,8 +167,8 @@ namespace WpfTestbench {
     //      -----------
   
     public StandardColorComboBox() {
-      foreach (var coloritem in colorItems) {
-        Items.Add(new ColorSamplePanel(coloritem.Name, coloritem.Brush));
+      foreach (var colorItem in colorItems) {
+        Items.Add(new ColorSamplePanel(colorItem.Name, colorItem.Brush));
       }
       SelectedValuePath = "ColorBrush";
       SelectionChanged += StandardColorComboBox_SelectionChanged;

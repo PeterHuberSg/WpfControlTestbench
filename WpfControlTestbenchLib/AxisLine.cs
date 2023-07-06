@@ -90,7 +90,7 @@ namespace WpfTestbench {
     public readonly Brush[] Brushes;
 
 
-    public readonly int[] SinglelineStrokeDashesVisible = {8, 8};
+    public readonly int[] SingleLineStrokeDashesVisible = {8, 8};
     public readonly int[][] MultilineStrokeDashesVisible = {
       new int[] {24, 72},     //line1
       new int[] {0, 24, 24, 48}, //line2
@@ -98,7 +98,7 @@ namespace WpfTestbench {
     };
 
 
-    public readonly int[] SinglelineStrokeDashesTransparent = {8, 8};
+    public readonly int[] SingleLineStrokeDashesTransparent = {8, 8};
     public readonly int[][] MultilineStrokeDashesTransparent = {
       new int[] {8, 24},     //line1
       new int[] {0, 8, 8, 16}, //line2
@@ -246,8 +246,8 @@ namespace WpfTestbench {
         if (lineType!=LineTypeEnum.margin) {
           throw new Exception("lineType '' only support for FrameworkElements inheriting from Control.");
         }
-        strokeDashesVisible = axisLineContext.SinglelineStrokeDashesVisible;
-        strokeDashesTransparent = axisLineContext.SinglelineStrokeDashesTransparent;
+        strokeDashesVisible = axisLineContext.SingleLineStrokeDashesVisible;
+        strokeDashesTransparent = axisLineContext.SingleLineStrokeDashesTransparent;
       } else {
         strokeDashesVisible = axisLineContext.MultilineStrokeDashesVisible[(int)lineType];
         strokeDashesTransparent = axisLineContext.MultilineStrokeDashesTransparent[(int)lineType];
@@ -379,6 +379,7 @@ namespace WpfTestbench {
       if (Dimension==DimensionEnum.width) {
         if (LineOrder==LineOrderEnum.first) {
           //left
+          #pragma warning disable IDE0045 // Convert to conditional expression
           if (axisLineContext.TestFrameworkElement.HorizontalAlignment==HorizontalAlignment.Right && 
             LineType==LineTypeEnum.margin) 
           {
@@ -386,6 +387,7 @@ namespace WpfTestbench {
           } else {
             transparentMargin = visibleMargin = offsetPoint.X;
           }
+          #pragma warning restore IDE0045 // Convert to conditional expression
           if (LineType>=LineTypeEnum.border) {
             transparentMargin = visibleMargin += axisLineContext.TestControl!.BorderThickness.Left;
           }

@@ -94,7 +94,7 @@ Of course, required width is often different from the width that the host can pr
 - Does the parent or your control handle `Margin` ? `Padding` ?
 
 **Answers:** 
-- Too little space: If your control renders outside the given space, it depends on clipping if that is shown or not. Too much space: Depends on alignment. If not stretched, parent (!) will place the content accordingly. If streched, child should use all available space.
+- Too little space: If your control renders outside the given space, it depends on clipping if that is shown or not. Too much space: Depends on alignment. If not stretched, parent (!) will place the content accordingly. If stretched, child should use all available space.
 - When `Width` is set, your control is supposed to use exactly that space. If alignment is stretched, no stretching should happen, but the parent will center your control. 
 - When `Width` is undefined, your control should figure out itself how much space it needs. 
 - Changing `HorizontalAlignment` from `Left` to `Center` or `Right` does not matter for your control, the rendering is the same, but the parent will place it differently. Changing `HorizontalAlignment` from `Left` to `Stretch` will ask your control to render using all available size, not just the size it feels it should use.

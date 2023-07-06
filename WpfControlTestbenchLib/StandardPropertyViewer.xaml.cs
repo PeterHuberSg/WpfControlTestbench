@@ -50,9 +50,12 @@ namespace WpfTestbench {
     readonly int testFrameworkElementGirdColumn;
 
 
+
+    #pragma warning disable IDE0079 // Remove unnecessary suppression
     #pragma warning disable CS8618 // Non-nullable field testFrameworkElement, referenceLine and origineShadow are uninitialized. Consider declaring as nullable.
-    public StandardPropertyViewer(FrameworkElement testFrameworkElement, Grid hostGrid): this() {
+    public StandardPropertyViewer(FrameworkElement testFrameworkElement, Grid hostGrid) : this() {
     #pragma warning restore CS8618
+    #pragma warning restore IDE0079
       try { //improve how WPF handles exceptions in the constructor
         this.testFrameworkElement = testFrameworkElement;
         this.hostGrid = hostGrid;
@@ -94,12 +97,13 @@ namespace WpfTestbench {
         throw;
       }
     }
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 
 
     /// <summary>
     /// Default constructor
     /// </summary>
-    #pragma warning disable CS8618 // Non-nullable field testFrameworkElement and origineShadow are uninitialized. Consider declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field testFrameworkElement and origineShadow are uninitialized. Consider declaring as nullable.
     public StandardPropertyViewer() {
     #pragma warning restore CS8618
       InitializeComponent();
@@ -141,7 +145,7 @@ namespace WpfTestbench {
 
         if (testControl==null) {
           stringBuilder.AppendLine("'" + testFrameworkElement.GetType() + "' does not inherit from Control");
-        } else  if (testControl.Template==null) {
+        } else if (testControl.Template==null) {
           stringBuilder.AppendLine("Control has no template assigned.");
         } else {
           var xmlSettings = new XmlWriterSettings { Indent = true };
@@ -240,7 +244,7 @@ namespace WpfTestbench {
         hasGotFocused = false;
         TextBox textBox = (TextBox)sender;
         textBox.SelectAll();
-      }        
+      }
     }
     #endregion
 
@@ -249,10 +253,10 @@ namespace WpfTestbench {
     //      ---------------
 
     private void setupAlignment() {
-      HorizontalAlignmentComboBox.Items.Add(new ComboBoxItem {Content=((HorizontalAlignment)0).ToString()});
-      HorizontalAlignmentComboBox.Items.Add(new ComboBoxItem {Content=((HorizontalAlignment)1).ToString()});
-      HorizontalAlignmentComboBox.Items.Add(new ComboBoxItem {Content=((HorizontalAlignment)2).ToString()});
-      HorizontalAlignmentComboBox.Items.Add(new ComboBoxItem {Content=((HorizontalAlignment)3).ToString()});
+      HorizontalAlignmentComboBox.Items.Add(new ComboBoxItem { Content=((HorizontalAlignment)0).ToString() });
+      HorizontalAlignmentComboBox.Items.Add(new ComboBoxItem { Content=((HorizontalAlignment)1).ToString() });
+      HorizontalAlignmentComboBox.Items.Add(new ComboBoxItem { Content=((HorizontalAlignment)2).ToString() });
+      HorizontalAlignmentComboBox.Items.Add(new ComboBoxItem { Content=((HorizontalAlignment)3).ToString() });
       HorizontalAlignmentComboBox.SelectedIndex = (int)testFrameworkElement.HorizontalAlignment;
 
       DependencyPropertyDescriptor horizontalDescriptor = DependencyPropertyDescriptor.FromProperty(FrameworkElement.HorizontalAlignmentProperty, typeof(FrameworkElement));
@@ -260,10 +264,10 @@ namespace WpfTestbench {
 
       HorizontalAlignmentComboBox.SelectionChanged += new SelectionChangedEventHandler(horizontalAlignmentComboBox_SelectionChanged);
 
-      VerticalAlignmentComboBox.Items.Add(new ComboBoxItem {Content=((VerticalAlignment)0).ToString()});
-      VerticalAlignmentComboBox.Items.Add(new ComboBoxItem {Content=((VerticalAlignment)1).ToString()});
-      VerticalAlignmentComboBox.Items.Add(new ComboBoxItem {Content=((VerticalAlignment)2).ToString()});
-      VerticalAlignmentComboBox.Items.Add(new ComboBoxItem {Content=((VerticalAlignment)3).ToString()});
+      VerticalAlignmentComboBox.Items.Add(new ComboBoxItem { Content=((VerticalAlignment)0).ToString() });
+      VerticalAlignmentComboBox.Items.Add(new ComboBoxItem { Content=((VerticalAlignment)1).ToString() });
+      VerticalAlignmentComboBox.Items.Add(new ComboBoxItem { Content=((VerticalAlignment)2).ToString() });
+      VerticalAlignmentComboBox.Items.Add(new ComboBoxItem { Content=((VerticalAlignment)3).ToString() });
       VerticalAlignmentComboBox.SelectedIndex = (int)testFrameworkElement.VerticalAlignment;
 
       DependencyPropertyDescriptor verticalDescriptor = DependencyPropertyDescriptor.FromProperty(FrameworkElement.VerticalAlignmentProperty, typeof(FrameworkElement));
@@ -349,8 +353,8 @@ namespace WpfTestbench {
       setupTextBox(MarginRightTextBox, marginRightTextBox_LostFocus);
       setupTextBox(MarginBottomTextBox, marginBottomTextBox_LostFocus);
       updateMarginTextBoxes();
-    
-      DependencyPropertyDescriptor descriptor = DependencyPropertyDescriptor.FromProperty( FrameworkElement.MarginProperty, typeof(FrameworkElement));
+
+      DependencyPropertyDescriptor descriptor = DependencyPropertyDescriptor.FromProperty(FrameworkElement.MarginProperty, typeof(FrameworkElement));
       descriptor.AddValueChanged(testFrameworkElement, testFrameworkElement_MarginChanged);
     }
 
@@ -423,10 +427,10 @@ namespace WpfTestbench {
       setupTextBox(PaddingRightTextBox, paddingRightTextBox_LostFocus);
       setupTextBox(PaddingBottomTextBox, paddingBottomTextBox_LostFocus);
       updatePaddingTextBoxes();
-    
+
       DependencyPropertyDescriptor borderDescriptor = DependencyPropertyDescriptor.FromProperty(Control.BorderThicknessProperty, typeof(Control));
       borderDescriptor.AddValueChanged(testControl, testControl_BorderChanged);
-    
+
       DependencyPropertyDescriptor paddingDescriptor = DependencyPropertyDescriptor.FromProperty(Control.PaddingProperty, typeof(Control));
       paddingDescriptor.AddValueChanged(testControl, testControl_PaddingChanged);
     }
@@ -549,78 +553,78 @@ namespace WpfTestbench {
       WpfBinding.Setup(FontFamilyComboBox, "SelectedItem", testFrameworkElement, Control.FontFamilyProperty, BindingMode.TwoWay);
 
       FontWeightComboBox.ItemsSource = new FontWeight[]{
-        FontWeights.Black,
-        FontWeights.Bold,
-        FontWeights.DemiBold,
-        FontWeights.ExtraBlack,
-        FontWeights.ExtraBold,
-        FontWeights.ExtraLight,
-        FontWeights.Heavy,
-        FontWeights.Light,
-        FontWeights.Medium,
-        FontWeights.Normal,
-        FontWeights.Regular,
-        FontWeights.SemiBold,
-        FontWeights.Thin,
-        FontWeights.UltraBlack,
-        FontWeights.UltraBold,
-        FontWeights.UltraLight
-      };
+            FontWeights.Black,
+            FontWeights.Bold,
+            FontWeights.DemiBold,
+            FontWeights.ExtraBlack,
+            FontWeights.ExtraBold,
+            FontWeights.ExtraLight,
+            FontWeights.Heavy,
+            FontWeights.Light,
+            FontWeights.Medium,
+            FontWeights.Normal,
+            FontWeights.Regular,
+            FontWeights.SemiBold,
+            FontWeights.Thin,
+            FontWeights.UltraBlack,
+            FontWeights.UltraBold,
+            FontWeights.UltraLight
+          };
       FontWeightComboBox.SelectedItem = testControl.FontWeight;
       WpfBinding.Setup(FontWeightComboBox, "SelectedItem", testFrameworkElement, Control.FontWeightProperty, BindingMode.TwoWay);
 
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "8", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "9", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "10", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "11", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "12", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "14", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "16", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "18", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "20", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "22", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "24", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "26", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "28", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "36", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "48", HorizontalAlignment = HorizontalAlignment.Right});
-      FontSizeComboBox.Items.Add(new ComboBoxItem {Content = "72", HorizontalAlignment = HorizontalAlignment.Right});
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "8", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "9", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "10", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "11", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "12", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "14", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "16", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "18", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "20", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "22", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "24", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "26", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "28", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "36", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "48", HorizontalAlignment = HorizontalAlignment.Right });
+      FontSizeComboBox.Items.Add(new ComboBoxItem { Content = "72", HorizontalAlignment = HorizontalAlignment.Right });
       FontSizeComboBox.SelectedIndex = 4;
       string searchIntString = testControl.FontSize.ToString();
-      for (int itemIndex = 0; itemIndex < FontSizeComboBox.Items.Count; itemIndex++){
+      for (int itemIndex = 0; itemIndex < FontSizeComboBox.Items.Count; itemIndex++) {
         ComboBoxItem comboBoxItem = (ComboBoxItem)FontSizeComboBox.Items[itemIndex];
         if (((string)comboBoxItem.Content)==searchIntString) {
           FontSizeComboBox.SelectedIndex = itemIndex;
           break;
         }
-			}
+      }
       WpfBinding.Setup(FontSizeComboBox, "Text", testFrameworkElement, Control.FontSizeProperty, BindingMode.TwoWay);
 
       FontStretchComboBox.ItemsSource = new FontStretch[]{
-        FontStretches.UltraCondensed, 
-        FontStretches.ExtraCondensed, 
-        FontStretches.Condensed, 
-        FontStretches.SemiCondensed, 
-        //FontStretches.Medium, same as Normal
-        FontStretches.Normal, 
-        FontStretches.Expanded, 
-        FontStretches.SemiExpanded, 
-        FontStretches.ExtraExpanded, 
-        FontStretches.UltraExpanded};
+            FontStretches.UltraCondensed,
+            FontStretches.ExtraCondensed,
+            FontStretches.Condensed,
+            FontStretches.SemiCondensed, 
+            //FontStretches.Medium, same as Normal
+            FontStretches.Normal,
+            FontStretches.Expanded,
+            FontStretches.SemiExpanded,
+            FontStretches.ExtraExpanded,
+            FontStretches.UltraExpanded};
       FontStretchComboBox.SelectedItem = testControl.FontStretch;
       WpfBinding.Setup(FontStretchComboBox, "SelectedItem", testFrameworkElement, Control.FontStretchProperty, BindingMode.TwoWay);
 
       FontStyleComboBox.ItemsSource = new FontStyle[]{
-        FontStyles.Normal,
-        FontStyles.Italic,
-        FontStyles.Oblique
-      };
+            FontStyles.Normal,
+            FontStyles.Italic,
+            FontStyles.Oblique
+          };
       FontStyleComboBox.SelectedItem = testControl.FontStyle;
       WpfBinding.Setup(FontStyleComboBox, "SelectedItem", testFrameworkElement, Control.FontStyleProperty, BindingMode.TwoWay);
 
       ForegroundColorComboBox.SetSelectedBrush(testControl.Foreground);
       WpfBinding.Setup(ForegroundColorComboBox, "SelectedColorBrush", testFrameworkElement, Control.ForegroundProperty, BindingMode.TwoWay);
-//      WpfBinding.Setup(ForegroundColorComboBox, "SelectedColorBrush", testFrameworkElement, Control.ForegroundProperty, BindingMode.TwoWay, new PassThroughConverter());
+      //      WpfBinding.Setup(ForegroundColorComboBox, "SelectedColorBrush", testFrameworkElement, Control.ForegroundProperty, BindingMode.TwoWay, new PassThroughConverter());
       BackgroundColorComboBox.SetSelectedBrush(testControl.Background);
       WpfBinding.Setup(BackgroundColorComboBox, "SelectedColorBrush", testFrameworkElement, Control.BackgroundProperty, BindingMode.TwoWay);
       BorderColorComboBox.SetSelectedBrush(testControl.BorderBrush);

@@ -66,7 +66,7 @@ namespace WpfTestbench {
 
     /// <summary>
     /// A control inheriting from FrameworkElement to be inspected in TestBench. This property is mainly
-    /// used by XAML and gets set exactly once after the TestBench contructor has executed. Changing its value after
+    /// used by XAML and gets set exactly once after the TestBench constructor has executed. Changing its value after
     /// the initial setting throws an exception.
     /// </summary>
     public FrameworkElement? TestControl {
@@ -93,7 +93,7 @@ namespace WpfTestbench {
         }
       }
 
-      if (e.NewValue is FrameworkElement newControl) {
+      if (e.NewValue is FrameworkElement) {
         //XAML is assigning a TextControl to TestBench
         TestBench testBench = (TestBench)d;
         testBench.setupStandardPropertyViewer();
@@ -122,7 +122,7 @@ namespace WpfTestbench {
 
     private static void TestPropertiesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
       TestBench testBench = (TestBench)d;
-      if (e.OldValue is FrameworkElement oldControl) {
+      if (e.OldValue is FrameworkElement) {
         if (DesignerProperties.GetIsInDesignMode(d)) {
           throw new NotSupportedException("TestBench: Press the WPF Designer Refresh button to see changed TestProperties.");
         } else {
@@ -203,7 +203,7 @@ namespace WpfTestbench {
       outerGrid = new Grid();
       outerGrid.RowDefinitions.Add(new RowDefinition { Height =  GridLength.Auto });//testPropertiesContainer
       outerGrid.RowDefinitions.Add(new RowDefinition { Height =  GridLength.Auto });//Standard Properties
-      outerGrid.RowDefinitions.Add(new RowDefinition { Height =  GridLength.Auto });//hSpliter
+      outerGrid.RowDefinitions.Add(new RowDefinition { Height =  GridLength.Auto });//hSplitter
       outerGrid.RowDefinitions.Add(new RowDefinition { /*1Star*/ }); //InnerGrid
       children = new List<Visual> {
         outerGrid
@@ -235,7 +235,7 @@ namespace WpfTestbench {
 
       innerGrid = new Grid();
       innerGrid.ColumnDefinitions.Add(new ColumnDefinition { /*1Star*/ });//testControlContainer
-      innerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });//vSpliter
+      innerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });//vSplitter
       innerGrid.ColumnDefinitions.Add(new ColumnDefinition { /*1Star*/ MinWidth=300 });//wpfTraceViewer
       outerGrid.Children.Add(innerGrid);
       Grid.SetRow(innerGrid, 3);//column = 0
@@ -275,7 +275,7 @@ namespace WpfTestbench {
       setupContainers(standardPropertyViewer.ContainerComboBox);//executes innerGrid.Children.Add(testControlContainer);
       setContainer(containerTypeEnum.GridStar);//adds TestControl to testContainer
       createAxisLines();
-      createOrigineShadow();
+      createOriginShadow();
     }
 
 
@@ -315,19 +315,19 @@ namespace WpfTestbench {
       containerComboBox.Items.Add(new ComboBoxItem { Content = "ScrollViewer", Tag=containerTypeEnum.ScrollViewer });
       containerComboBox.Items.Add(new ComboBoxItem { Content = "Canvas", Tag=containerTypeEnum.Canvas });
       containerComboBox.Items.Add(new ComboBoxItem { Content = "Hor. StackPanel", Tag=containerTypeEnum.HStackPanel });
-      containerComboBox.Items.Add(new ComboBoxItem { Content = "Vert. StackPannel", Tag=containerTypeEnum.VStackPanel });
-      containerComboBox.Items.Add(new ComboBoxItem { Content = "DockPannel", Tag=containerTypeEnum.DockPanel });
+      containerComboBox.Items.Add(new ComboBoxItem { Content = "Vert. StackPanel", Tag=containerTypeEnum.VStackPanel });
+      containerComboBox.Items.Add(new ComboBoxItem { Content = "DockPanel", Tag=containerTypeEnum.DockPanel });
       containerComboBox.SelectedIndex = 0;
       containerComboBox.SelectionChanged += ContainerComboBox_SelectionChanged;
 
       standardPropertyViewer!.ContainerTraceCheckBox.Click += ContainerTraceCheckBox_Click;
 
-      SolidColorBrush cotainerBackground = Brushes.Gray;
-      gridStarContainer = new GridTraced("GridStarContainer", isTracing: true) { Background = cotainerBackground};
+      SolidColorBrush containerBackground = Brushes.Gray;
+      gridStarContainer = new GridTraced("GridStarContainer", isTracing: true) { Background = containerBackground};
       gridStarContainer.RowDefinitions.Add(new RowDefinition { /*1star*/ });
       gridStarContainer.ColumnDefinitions.Add(new ColumnDefinition { /*1star*/ });
 
-      gridAutoContainer = new GridTraced("GridAutoContainer", isTracing: true) { Background = cotainerBackground};
+      gridAutoContainer = new GridTraced("GridAutoContainer", isTracing: true) { Background = containerBackground};
       gridAutoContainer.RowDefinitions.Add(new RowDefinition { /*1star*/ });
       gridAutoContainer.RowDefinitions.Add(new RowDefinition { Height =  GridLength.Auto });
       gridAutoContainer.RowDefinitions.Add(new RowDefinition { /*1star*/ });
@@ -335,20 +335,21 @@ namespace WpfTestbench {
       gridAutoContainer.ColumnDefinitions.Add(new ColumnDefinition { Width =  GridLength.Auto });
       gridAutoContainer.ColumnDefinitions.Add(new ColumnDefinition { /*1star*/ });
 
-      scrollViewerContainer = new ScrollViewerTraced("ScrollViewerContainer", isTracing: true) 
-        { Background = cotainerBackground};
-      scrollViewerContainer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
-      scrollViewerContainer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-      
-      canvasContainer = new CanvasTraced("CanvasContainer", isTracing: true) { Background = cotainerBackground};
+      scrollViewerContainer = new ScrollViewerTraced("ScrollViewerContainer", isTracing: true) {
+        Background = containerBackground,
+        HorizontalScrollBarVisibility = ScrollBarVisibility.Visible,
+        VerticalScrollBarVisibility = ScrollBarVisibility.Visible
+      };
+
+      canvasContainer = new CanvasTraced("CanvasContainer", isTracing: true) { Background = containerBackground};
       
       hStackPanelContainer = new StackPanelTraced("HStackPanelContainer", isTracing: true) 
-        { Background = cotainerBackground, Orientation = Orientation.Horizontal};
+        { Background = containerBackground, Orientation = Orientation.Horizontal};
       
       vStackPanelContainer = new StackPanelTraced("VStackPanelContainer", isTracing: true) 
-        { Background = cotainerBackground, Orientation = Orientation.Vertical};
+        { Background = containerBackground, Orientation = Orientation.Vertical};
       
-      dockPanelContainer = new DockPanelTraced("DockPanelContainer", isTracing: true) { Background = cotainerBackground};
+      dockPanelContainer = new DockPanelTraced("DockPanelContainer", isTracing: true) { Background = containerBackground};
     }
 
 
@@ -567,18 +568,18 @@ namespace WpfTestbench {
     #region Shadow of original position
     //      ---------------------------
 
-    Rectangle origineShadow;
+    Rectangle originShadow;
 
 
-    private void createOrigineShadow() {
-      origineShadow = new Rectangle {
+    private void createOriginShadow() {
+      originShadow = new Rectangle {
         Fill = new SolidColorBrush(Color.FromArgb(0x80, 0xA0, 0xA0, 0xA0))
       };
-      origineShadow.Fill.Freeze();
-      innerGrid.Children.Add(origineShadow);//row: 0, column: 0
-      //Grid.SetRow(origineShadow, testFrameworkElementGridRow);
-      //Grid.SetColumn(origineShadow, testFrameworkElementGirdColumn);
-      Grid.SetZIndex(origineShadow, Grid.GetZIndex(TestControl) - 1);
+      originShadow.Fill.Freeze();
+      innerGrid.Children.Add(originShadow);//row: 0, column: 0
+      //Grid.SetRow(originShadow, testFrameworkElementGridRow);
+      //Grid.SetColumn(originShadow, testFrameworkElementGirdColumn);
+      Grid.SetZIndex(originShadow, Grid.GetZIndex(TestControl) - 1);
       TestControl!.SizeChanged += TestControl_SizeChanged;
       var horizontalAlignmentDescriptor = 
         DependencyPropertyDescriptor.FromProperty(FrameworkElement.HorizontalAlignmentProperty, typeof(FrameworkElement));
@@ -590,33 +591,33 @@ namespace WpfTestbench {
 
 
     private void TestControl_SizeChanged(object sender, SizeChangedEventArgs e) {
-      updateOrigineShadowPosition();
+      updateOriginShadowPosition();
     }
 
 
     void TestControl_HorizontalAlignmentChanged(object? sender, EventArgs args) {
-      updateOrigineShadowPosition();
+      updateOriginShadowPosition();
     }
 
 
     void TestControl_VerticalAlignmentChanged(object? sender, EventArgs args) {
-      updateOrigineShadowPosition();
+      updateOriginShadowPosition();
     }
 
 
-    private void updateOrigineShadowPosition() {
-      origineShadow.HorizontalAlignment = TestControl!.HorizontalAlignment;
+    private void updateOriginShadowPosition() {
+      originShadow.HorizontalAlignment = TestControl!.HorizontalAlignment;
       #pragma warning disable IDE0045 // Convert to conditional expression
-      if (origineShadow.HorizontalAlignment==HorizontalAlignment.Stretch && double.IsNaN(TestControl.Width)) {
-        origineShadow.Width = double.NaN;
+      if (originShadow.HorizontalAlignment==HorizontalAlignment.Stretch && double.IsNaN(TestControl.Width)) {
+        originShadow.Width = double.NaN;
       } else {
-        origineShadow.Width = Math.Max(strokeThickness, TestControl.ActualWidth);
+        originShadow.Width = Math.Max(strokeThickness, TestControl.ActualWidth);
       }
-      origineShadow.VerticalAlignment = TestControl.VerticalAlignment;
-      if (origineShadow.VerticalAlignment==VerticalAlignment.Stretch && double.IsNaN(TestControl.Height)) {
-        origineShadow.Height = double.NaN;
+      originShadow.VerticalAlignment = TestControl.VerticalAlignment;
+      if (originShadow.VerticalAlignment==VerticalAlignment.Stretch && double.IsNaN(TestControl.Height)) {
+        originShadow.Height = double.NaN;
       } else {
-        origineShadow.Height = Math.Max(strokeThickness, TestControl.ActualHeight);
+        originShadow.Height = Math.Max(strokeThickness, TestControl.ActualHeight);
       }
       #pragma warning restore IDE0045
     }
@@ -627,7 +628,7 @@ namespace WpfTestbench {
     //      -------
 
     int testFuncsIndex = -1;
-    Action? testResultAction;//tests if the last testFunctionwas succesfull before next test gets executed
+    Action? testResultAction;//tests if the last testFunction was successful before next test gets executed
 
 
     const double nan = double.NaN;
@@ -681,7 +682,7 @@ namespace WpfTestbench {
           return null; 
         }));
       }
-      //     Width     Horizo ntal  Vertical  Left        Right       Top         Bottom      Text         Font
+      //     Width     Horizontal   Vertical  Left        Right       Top         Bottom      Text         Font
       //         Height Contr Conte Cntr Cnte Mar Bor Pad Pad Bor Mar Mar Bor Pad Pad Bor Mar 
       addTest(nan, nan, hstr, hstr, vst, vst,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, arial, 12, isCo, FeT, "Layouting");
       addTest(nan, nan, hstr, hstr, vst, vst, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, arial, 12, isCo, FeT, "Left Margin");
@@ -696,26 +697,26 @@ namespace WpfTestbench {
       addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,  0,  0, arial, 12, isCo, CoT, "Bottom Padding");
       addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,  0, arial, 12, isCo, CoT, "Bottom Border");
       addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Bottom Margin");
-      addTest(nan, nan, left, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Horizontal Alignement Left");
-      addTest(nan, nan, hcen, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Horizontal Alignement Center");
-      addTest(nan, nan, rigt, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Horizontal Alignement Right");
-      addTest(nan, nan, hstr, hstr, top, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Vertical Alignement Top");
-      addTest(nan, nan, hstr, hstr, vce, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Vertical Alignement Center");
-      addTest(nan, nan, hstr, hstr, bot, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Vertical Alignement Bottom");
+      addTest(nan, nan, left, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Horizontal Alignment Left");
+      addTest(nan, nan, hcen, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Horizontal Alignment Center");
+      addTest(nan, nan, rigt, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Horizontal Alignment Right");
+      addTest(nan, nan, hstr, hstr, top, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Vertical Alignment Top");
+      addTest(nan, nan, hstr, hstr, vce, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Vertical Alignment Center");
+      addTest(nan, nan, hstr, hstr, bot, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, FeT, "Vertical Alignment Bottom");
       addTest(nan, nan, hstr, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Horizontal Content Left");
       addTest(nan, nan, hstr, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Horizontal Content Center");
       addTest(nan, nan, hstr, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Horizontal Content Right");
       addTest(nan, nan, hstr, hstr, vst, top, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Vertical Content Top");
       addTest(nan, nan, hstr, hstr, vst, vce, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Vertical Content Center");
       addTest(nan, nan, hstr, hstr, vst, bot, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Vertical Content Bottom");
-      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 14, isCo, CoT, "Hor Content Streched, Arial 14");
-      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 16, isCo, CoT, "Hor Content Streched, Arial 16");
-      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 18, isCo, CoT, "Hor Content Streched, Arial 18");
-      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 22, isCo, CoT, "Hor Content Streched, Arial 22");
-      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 26, isCo, CoT, "Hor Content Streched, Arial 26");
-      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 32, isCo, CoT, "Hor Content Streched, Arial 32");
-      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 40, isCo, CoT, "Hor Content Streched, Arial 40");
-      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, couri, 60, isCo, CoT, "Hor Content Streched, Courier 60");
+      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 14, isCo, CoT, "Hor Content Stretched, Arial 14");
+      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 16, isCo, CoT, "Hor Content Stretched, Arial 16");
+      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 18, isCo, CoT, "Hor Content Stretched, Arial 18");
+      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 22, isCo, CoT, "Hor Content Stretched, Arial 22");
+      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 26, isCo, CoT, "Hor Content Stretched, Arial 26");
+      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 32, isCo, CoT, "Hor Content Stretched, Arial 32");
+      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 40, isCo, CoT, "Hor Content Stretched, Arial 40");
+      addTest(nan, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, couri, 60, isCo, CoT, "Hor Content Stretched, Courier 60");
       addTest(nan, nan, hstr, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Hor Content Right, Arial 12");
       addTest(nan, nan, hstr, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 14, isCo, CoT, "Hor Content Right, Arial 14");
       addTest(nan, nan, hstr, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 16, isCo, CoT, "Hor Content Right, Arial 16");
@@ -726,19 +727,19 @@ namespace WpfTestbench {
       addTest(nan, nan, hstr, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 40, isCo, CoT, "Hor Content Right, Arial 40");
       addTest(nan, nan, hstr, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, couri, 60, isCo, CoT, "Hor Content Right, Courier 60");
       
-      addTest(tWi, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Stretched, Hor Content Streched");
+      addTest(tWi, nan, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Stretched, Hor Content Stretched");
       addTest(tWi, nan, hstr, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Stretched, Hor Content Left");
       addTest(tWi, nan, hstr, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Stretched, Hor Content Center");
       addTest(tWi, nan, hstr, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Stretched, Hor Content Right");
-      addTest(tWi, nan, left, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Left, Hor Content Streched");
+      addTest(tWi, nan, left, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Left, Hor Content Stretched");
       addTest(tWi, nan, left, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Left, Hor Content Left");
       addTest(tWi, nan, left, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Left, Hor Content Center");
       addTest(tWi, nan, left, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Left, Hor Content Right");
-      addTest(tWi, nan, hcen, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Center, Hor Content Streched");
+      addTest(tWi, nan, hcen, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Center, Hor Content Stretched");
       addTest(tWi, nan, hcen, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Center, Hor Content Left");
       addTest(tWi, nan, hcen, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Center, Hor Content Center");
       addTest(tWi, nan, hcen, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Center, Hor Content Right");
-      addTest(tWi, nan, rigt, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Right, Hor Content Streched");
+      addTest(tWi, nan, rigt, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Right, Hor Content Stretched");
       addTest(tWi, nan, rigt, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Right, Hor Content Left");
       addTest(tWi, nan, rigt, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Right, Hor Content Center");
       addTest(tWi, nan, rigt, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width 50%, Horizontal Right, Hor Content Right");
@@ -758,19 +759,19 @@ namespace WpfTestbench {
       addTest(nan, tHi, hstr, hstr, bot, top, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Height 50%, Vertical Center, Ver Content Left");
       addTest(nan, tHi, hstr, hstr, bot, vce, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Height 50%, Vertical Center, Ver Content Center");
       addTest(nan, tHi, hstr, hstr, bot, bot, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Height 50%, Vertical Center, Ver Content Right");
-      addTest(tWi, tHi, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Stretched, Hor Content Streched");
+      addTest(tWi, tHi, hstr, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Stretched, Hor Content Stretched");
       addTest(tWi, tHi, hstr, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Stretched, Hor Content Left");
       addTest(tWi, tHi, hstr, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Stretched, Hor Content Center");
       addTest(tWi, tHi, hstr, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Stretched, Hor Content Right");
-      addTest(tWi, tHi, left, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Left, Hor Content Streched");
+      addTest(tWi, tHi, left, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Left, Hor Content Stretched");
       addTest(tWi, tHi, left, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Left, Hor Content Left");
       addTest(tWi, tHi, left, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Left, Hor Content Center");
       addTest(tWi, tHi, left, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Left, Hor Content Right");
-      addTest(tWi, tHi, hcen, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Center, Hor Content Streched");
+      addTest(tWi, tHi, hcen, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Center, Hor Content Stretched");
       addTest(tWi, tHi, hcen, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Center, Hor Content Left");
       addTest(tWi, tHi, hcen, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Center, Hor Content Center");
       addTest(tWi, tHi, hcen, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Center, Hor Content Right");
-      addTest(tWi, tHi, rigt, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Right, Hor Content Streched");
+      addTest(tWi, tHi, rigt, hstr, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Right, Hor Content Stretched");
       addTest(tWi, tHi, rigt, left, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Right, Hor Content Left");
       addTest(tWi, tHi, rigt, hcen, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width&Height 50%, Horizontal Right, Hor Content Center");
       addTest(tWi, tHi, rigt, rigt, vst, vst, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, arial, 12, isCo, CoT, "Width%Height 50%, Horizontal Right, Hor Content Right");
@@ -802,7 +803,7 @@ namespace WpfTestbench {
       double width,
       double height,
       HorizontalAlignment horizontalControlAlignment,
-      HorizontalAlignment horizontaControllAlignment,
+      HorizontalAlignment horizontalContentAlignment,
       VerticalAlignment verticalControlAlignment,
       VerticalAlignment verticalContentAlignment,
       double marginLeft,
@@ -829,7 +830,7 @@ namespace WpfTestbench {
         width,
         height,
         horizontalControlAlignment,
-        horizontaControllAlignment,
+        horizontalContentAlignment,
         verticalControlAlignment,
         verticalContentAlignment,
         marginLeft,
@@ -853,7 +854,7 @@ namespace WpfTestbench {
       double width,
       double height,
       HorizontalAlignment horizontalControlAlignment,
-      HorizontalAlignment horizontaControllAlignment,
+      HorizontalAlignment horizontalContentAlignment,
       VerticalAlignment verticalControlAlignment,
       VerticalAlignment verticalContentAlignment,
       double marginLeft,
@@ -877,7 +878,7 @@ namespace WpfTestbench {
       TestControl.VerticalAlignment = verticalControlAlignment;
       TestControl.Margin = new Thickness(marginLeft, marginTop, marginRight, marginBottom);
       if (TestControl is Control control) {
-        control.HorizontalContentAlignment = horizontaControllAlignment;
+        control.HorizontalContentAlignment = horizontalContentAlignment;
         control.VerticalContentAlignment = verticalContentAlignment;
         control.BorderThickness = new Thickness(borderLeft, borderTop, borderRight, borderBottom);
         control.Padding = new Thickness(paddingLeft, paddingTop, paddingRight, paddingBottom);
@@ -970,7 +971,7 @@ namespace WpfTestbench {
     double tWi;//testWidth
     double tHi;//testHeight
     HorizontalAlignment previousHorizontalControlAlignment;
-    HorizontalAlignment previousHorizontaControllAlignment;
+    HorizontalAlignment previousHorizontalContentAlignment;
     VerticalAlignment previousVerticalControlAlignment;
     VerticalAlignment previousVerticalContentAlignment;
     Thickness previousMargin;
@@ -996,7 +997,7 @@ namespace WpfTestbench {
       previousVerticalControlAlignment = TestControl.VerticalAlignment;
       previousMargin = TestControl.Margin;
       if (TestControl is Control control) {
-        previousHorizontaControllAlignment = control.HorizontalContentAlignment;
+        previousHorizontalContentAlignment = control.HorizontalContentAlignment;
         previousVerticalContentAlignment = control.VerticalContentAlignment;
         previousBorderThickness = control.BorderThickness;
         previousPadding = control.Padding;
@@ -1020,7 +1021,7 @@ namespace WpfTestbench {
       TestControl.VerticalAlignment = previousVerticalControlAlignment;
       TestControl.Margin = previousMargin;
       if (TestControl is Control control) {
-        control.HorizontalContentAlignment = previousHorizontaControllAlignment;
+        control.HorizontalContentAlignment = previousHorizontalContentAlignment;
         control.VerticalContentAlignment = previousVerticalContentAlignment;
         control.BorderThickness = previousBorderThickness;
         control.Padding = previousPadding;

@@ -64,7 +64,7 @@ namespace WpfTestbench {
         ControlTraced.FillProperty, BindingMode.TwoWay);
 
       TestBench.TestFunctions.Add(("Green Fill", fillGreen));
-      TestBench.TestFunctions.Add(("Red Fill", ()=>{ TestControlTraced.Fill = Brushes.Red; return null;}));
+      TestBench.TestFunctions.Add(("Red Fill", () => { TestControlTraced.Fill = Brushes.Red; return null; }));
       TestBench.TestFunctions.Add(("Ratio", testRatio));
       TestBench.TestFunctions.Add(("Reset Properties", resetProperties));
 
@@ -79,7 +79,7 @@ namespace WpfTestbench {
 
     private Action? fillGreen() {
       oldFill = TestControlTraced.Fill;
-      TestControlTraced.Fill = Brushes.LightGreen; 
+      TestControlTraced.Fill = Brushes.LightGreen;
       return null; ;
     }
 

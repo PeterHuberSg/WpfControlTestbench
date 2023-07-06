@@ -13,7 +13,7 @@ Warning()-->|->messageQueue->|-->|messageBuffer|     GetTrace()
 Error()---->|        v             
 Exception-->|        +----->Pulse tracerThread
 
-tracerThread is a background thread, meaning the application can stop without explicitely stopping 
+tracerThread is a background thread, meaning the application can stop without explicitly stopping 
 tracerThread. To shut down nicely, StopThread() should be used
 
 License
@@ -35,8 +35,8 @@ Contact: https://github.com/PeterHuberSg/WpfControlTestbench
 ********************************************************************************************************/
 
 
-//// In TimerMode, the trace is copied to the trace thread for further processing every millisends. Collectine messages and
-//// processing them from time to time is often more efficient, because the processing might invovle thread switching.
+//// In TimerMode, the trace is copied to the trace thread for further processing every millisecond. Collecting messages and
+//// processing them from time to time is often more efficient, because the processing might involve thread switching.
 //// If TimerMode is off, tracing a time will signal a lower priority thread to process. Since modern processors have many
 //// cores, often the low priority thread runs as fast as the higher priority and most trace messages get processed on their
 //// own.
@@ -44,7 +44,7 @@ Contact: https://github.com/PeterHuberSg/WpfControlTestbench
 
 
 // Used for debugging Tracer in real time. Comment out the next line when using Tracer in your application
-//#define RealTimeTraceing
+//#define RealTimeTracing
 
 using System;
 using System.Collections.Generic;
@@ -77,9 +77,9 @@ namespace WpfTestbench {
 
 
     /// <summary>
-    /// Trace messages get processed every TimerIntervallMilliseconds.
+    /// Trace messages get processed every TimerIntervalMilliseconds.
     /// </summary>
-    public const int TimerIntervallMilliseconds = 100;
+    public const int TimerIntervalMilliseconds = 100;
 
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace WpfTestbench {
 
     /// <summary>
     /// The number of trace messages Tracer stores in messageQueue before reporting an overflow. messageQueue is an internal buffer and 
-    /// gets continously emptied.
+    /// gets continuously emptied.
     /// </summary>
     public const int MaxMessageQueue = MaxMessageBuffer/3;
 
@@ -298,7 +298,7 @@ namespace WpfTestbench {
 
 
     private static void enqueueMessage(TraceTypeEnum traceType, string? filterText, ref string? threadMessageBuffer) {
-      #if RealTimeTraceing
+      #if RealTimeTracing
         RealTimeTracer.Trace("enqueueMessage(): start " + traceType.ShortString() + ": " + threadMessageBuffer);
       #endif
       var message = new TraceMessage(traceType, threadMessageBuffer!, filterText);
@@ -315,15 +315,15 @@ namespace WpfTestbench {
         }
       }
 
-      #if RealTimeTraceing
+      #if RealTimeTracing
         RealTimeTracer.Trace("enqueueMessage(): lock messagesQueue");
       #endif
       lock(messagesQueue){
-        #if RealTimeTraceing
+        #if RealTimeTracing
           RealTimeTracer.Trace("enqueueMessage(): locked messagesQueue");
         #endif
         if (messagesQueue.Count>=MaxMessageQueue-1) { //leave 1 space empty for overflow error message
-          #if RealTimeTraceing
+          #if RealTimeTracing
             RealTimeTracer.Trace("enqueueMessage(): messagesQueue overflow (" + messagesQueue.Count + " messages)");
           #endif
           if (!isMessagesQueueOverflow) {
@@ -334,16 +334,16 @@ namespace WpfTestbench {
         } else {
           isMessagesQueueOverflow = false;
           messagesQueue.Enqueue(message);
-          #if RealTimeTraceing
+          #if RealTimeTracing
             RealTimeTracer.Trace("enqueueMessage(): message added to messagesQueue");
           #endif
         }
         //Monitor.Pulse(messagesQueue);
-        #if RealTimeTraceing
+        #if RealTimeTracing
           RealTimeTracer.Trace("enqueueMessage(): messagesQueue pulsed, release lock");
         #endif
       }
-      #if RealTimeTraceing
+      #if RealTimeTracing
         RealTimeTracer.Trace("enqueueMessage(): messagesQueue lock released, end");
       #endif
     }
@@ -363,7 +363,7 @@ namespace WpfTestbench {
 
     private static Timer createTracerTimer() {
       var newTimer = new Timer(tracerTimerMethod);
-      newTimer.Change(TimerIntervallMilliseconds, TimerIntervallMilliseconds);
+      newTimer.Change(TimerIntervalMilliseconds, TimerIntervalMilliseconds);
       return newTimer;
     }
 
@@ -373,11 +373,11 @@ namespace WpfTestbench {
 
     private static void tracerTimerMethod(object? state) {
       try { //thread needs to catch its exceptions
-        #if RealTimeTraceing
+        #if RealTimeTracing
           RealTimeTracer.Trace("TracerTimer: start");
         #endif
         if (!isDoTracing) {
-          #if RealTimeTraceing
+          #if RealTimeTracing
             RealTimeTracer.Trace("TracerTimer: tracing has stopped");
           #endif
           return;
@@ -386,7 +386,7 @@ namespace WpfTestbench {
         if (isTracerTimerMethodRunning) {
           //if tracerTimerMethod is still running from last scheduled call, there is no point to execute it in parallel
           //on a different thread.
-#if RealTimeTraceing
+#if RealTimeTracing
             RealTimeTracer.Trace("TracerTimer: new execution was stopped, because previous call is still active.");
 #endif
           return;
@@ -395,16 +395,16 @@ namespace WpfTestbench {
         try {
           isTracerTimerMethodRunning = true;
           TraceMessage[] newTracerMessages;
-#if RealTimeTraceing
+#if RealTimeTracing
           RealTimeTracer.Trace("TracerTimer:lock messagesQueue");
 #endif
           lock (messagesQueue) {
 
-#if RealTimeTraceing
+#if RealTimeTracing
           RealTimeTracer.Trace("TracerTimer:messagesQueue locked");
 #endif
             if (messagesQueue.Count==0) {
-#if RealTimeTraceing
+#if RealTimeTracing
               RealTimeTracer.Trace("TracerTimer: queue empty, unlock messagesQueue");
 #endif
               return;
@@ -413,20 +413,20 @@ namespace WpfTestbench {
             //process new message
             newTracerMessages = messagesQueue.ToArray();
             messagesQueue.Clear();
-#if RealTimeTraceing
+#if RealTimeTracing
             RealTimeTracer.Trace("TracerTimer: read " + newTracerMessages.Length + " message(s), unlock messagesQueue");
 #endif
           }
-#if RealTimeTraceing
+#if RealTimeTracing
           RealTimeTracer.Trace("TracerTimer: messagesQueue unlocked");
 #endif
 
           //copy message to messageBuffer
-#if RealTimeTraceing
+#if RealTimeTracing
           RealTimeTracer.Trace("TracerTimer: lock messageBuffer");
 #endif
           lock (messageBuffer) {//need to lock writing so that reading can lock too to get a consistent set of messages
-#if RealTimeTraceing
+#if RealTimeTracing
             RealTimeTracer.Trace("TracerTimer: messageBuffer locked, copy messages");
 #endif
             foreach (TraceMessage newTracerMessage in newTracerMessages) {
@@ -435,11 +435,11 @@ namespace WpfTestbench {
               }
               messageBuffer.Enqueue(newTracerMessage);
             }
-#if RealTimeTraceing
+#if RealTimeTracing
             RealTimeTracer.Trace("TracerTimer: unlock messageBuffer");
 #endif
           }
-#if RealTimeTraceing
+#if RealTimeTracing
           RealTimeTracer.Trace("TracerTimer: messageBuffer unlocked");
 #endif
 
@@ -449,14 +449,14 @@ namespace WpfTestbench {
               try {
                 handler(newTracerMessages);
               } catch (Exception ex) {
-#if RealTimeTraceing
+#if RealTimeTracing
                 RealTimeTracer.Trace("TracerTimer: Exception in EventHandler !!!: " + ex.Message);
 #endif
                 ShowExceptionInDebugger(ex);
                 //todo: show exception in the other exception handlers
               }
             }
-#if RealTimeTraceing
+#if RealTimeTracing
             RealTimeTracer.Trace("TracerTimer: all eventhandlers executed");
 #endif
           }
@@ -464,12 +464,12 @@ namespace WpfTestbench {
           isTracerTimerMethodRunning = false;
         }
       } catch (Exception ex) {
-#if RealTimeTraceing
+#if RealTimeTracing
         RealTimeTracer.Trace("TracerTimer: Exception !!!: " + ex.Message);
 #endif
         ShowExceptionInDebugger(ex);
       }
-#if RealTimeTraceing
+#if RealTimeTracing
         RealTimeTracer.Trace("TracerTimer: completed");
 #endif
     }
@@ -479,7 +479,7 @@ namespace WpfTestbench {
     /// Stops tracing. 
     /// </summary>
     public static void StopTracing() {
-      #if RealTimeTraceing
+      #if RealTimeTracing
         RealTimeTracer.Trace("TracerTimer: StopTracing()");
       #endif
       lock (tracerTimer) {
@@ -503,7 +503,7 @@ namespace WpfTestbench {
 #if DEBUG
       try {
         if (IsBreakOnException && Debugger.IsAttached) {
-          //if an exception has occured, then the messge is available in the ouput window of the debugger
+          //if an exception has occurred, then the message is available in the output window of the debugger
           Debug.WriteLine("going to throw exception '" + ex.Message + "'");
           Debugger.Break();
         }
@@ -531,7 +531,7 @@ namespace WpfTestbench {
 #if DEBUG
       try {
         if (Debugger.IsAttached) {
-          //if an exception has occured, then the messge is available in the ouput window of the debugger
+          //if an exception has occurred, then the message is available in the output window of the debugger
           Debug.WriteLine(DateTime.Now.ToString("mm:ss.fff") + " BreakInDebuggerOrDoNothing " + message);
           Debugger.Break();
         }

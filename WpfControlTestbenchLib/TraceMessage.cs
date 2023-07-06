@@ -3,7 +3,7 @@
 WpfTestbench.TraceMessage
 =========================
 
-Contains information about one traving entry, like when it was created
+Contains information about one tracing entry, like when it was created
 
 License
 -------
@@ -31,7 +31,7 @@ using System.Text;
 namespace WpfTestbench {
 
   /// <summary>
-  /// Contains information about one traving entry, like when it was created
+  /// Contains information about one tracing entry, like when it was created
   /// </summary>
   public class TraceMessage {
     public readonly TraceTypeEnum TraceType;
@@ -42,8 +42,8 @@ namespace WpfTestbench {
     private string? asString;
 
 
-    public TraceMessage(TraceTypeEnum tracrType, string message, string? filterText = null) {
-      TraceType = tracrType;
+    public TraceMessage(TraceTypeEnum traceType, string message, string? filterText = null) {
+      TraceType = traceType;
       Created = DateTime.Now;
       Message = message;
       FilterText = filterText;

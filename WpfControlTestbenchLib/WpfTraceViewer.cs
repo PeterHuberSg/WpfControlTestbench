@@ -237,7 +237,7 @@ namespace WpfTestbench {
           previousMessageDate = DateTime.MaxValue;
         } else {
           line = traceMessage.ToString();
-          if (traceMessage.Created - previousMessageDate > TimeSpan.FromMilliseconds(3*Tracer.TimerIntervallMilliseconds)) {
+          if (traceMessage.Created - previousMessageDate > TimeSpan.FromMilliseconds(3*Tracer.TimerIntervalMilliseconds)) {
             line = Environment.NewLine + line;
           }
           previousMessageDate = traceMessage.Created;
