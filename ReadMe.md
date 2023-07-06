@@ -23,7 +23,7 @@ control.
 ![WpfControlTestbenchColored](WpfControlTestbenchColored.png)
  
 WPF controls support an amazing range of layouting (`Margin`, `Border`, `Padding`, 
-`Width`/`Height`, alignment, …) functionality and are accordingly challenging to 
+`Width`/`Height`, alignment, â€¦) functionality and are accordingly challenging to 
 develop. Even more difficult is to test if the control behaves properly 
 under the many scenarios possible. The `WpfControlTestbench` lets you test 
 this visually and interactively, you can see immediately what effect a 
@@ -98,7 +98,7 @@ Of course, required width is often different from the width that the host can pr
 - When `Width` is set, your control is supposed to use exactly that space. If alignment is stretched, no stretching should happen, but the parent will center your control. 
 - When `Width` is undefined, your control should figure out itself how much space it needs. 
 - Changing `HorizontalAlignment` from `Left` to `Center` or `Right` does not matter for your control, the rendering is the same, but the parent will place it differently. Changing `HorizontalAlignment` from `Left` to `Stretch` will ask your control to render using all available size, not just the size it feels it should use.
-- When the `Font.Size` (or `Font.Family` or …) changes, the content of your control might need more or less space, i.e. `Measure()`, `Arrange()` and `Render()` need to be executed.
+- When the `Font.Size` (or `Font.Family` or â€¦) changes, the content of your control might need more or less space, i.e. `Measure()`, `Arrange()` and `Render()` need to be executed.
 - The host of your control handles `Margin`. Your control needs to handle `Border` and `Padding`.
 
 Congratulations if you know the answers to all these questions. If not, 
@@ -454,7 +454,7 @@ A failed test gets shown in the EventTracer like this:
 
     Trc 11:20:05.228 Test: Width
     Trc 11:20:05.228 Control.Width=200 
-    …
+    â€¦
     Trc 11:20:05.636 Control.ActualWidth=123
 
     Err 11:20:06.448 Test Error: Actual width should be 200 but was 123.
@@ -486,7 +486,7 @@ CodeProject (Best Article of February 2022, Second Prize):
 [Deep Dive into WPF Layouting and Rendering](https://www.codeproject.com/Articles/5324971/Deep-Dive-into-WPF-Layouting-and-Rendering)
 
 
-Some other top  rated WPF articles I wrote on StackOverflow:
+Some other top  rated WPF articles I wrote on CodeProject:
 - [Guide to WPF DataGrid Formatting Using Bindings](https://www.codeproject.com/Articles/683429/Guide-to-WPF-DataGrid-Formatting-Using-Bindings)
 - [WPF DataGrid: Solving Sorting, ScrollIntoView, Refresh and Focus Problems](https://www.codeproject.com/Articles/5294035/WPF-DataGrid-Solving-Sorting-ScrollIntoView-Refres)
 - [Definitive Guide to WPF Colors, Color Spaces, Color Pickers and Creating Your Own Colors for Mere Mortals](https://www.codeproject.com/Articles/5296124/Definitive-Guide-to-WPF-Colors-Color-Spaces-Color)
