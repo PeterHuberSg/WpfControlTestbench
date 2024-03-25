@@ -164,11 +164,11 @@ namespace WpfTestbench {
     private static void Tracer_MessagesTraced(TraceMessage[] traceMessages) {
       //Switch to WPF thread
       Application application = Application.Current;
-      if (application==null) {
+      if (application is null) {
         //it can happen that WPF is shutting down already, but the tracer timer still fires. Then just don't do anything.
       } else {
         Dispatcher dispatcher = Application.Current.Dispatcher;
-        if (dispatcher==null) {
+        if (dispatcher is null) {
         } else {
           dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
             new Action<TraceMessage[]>(Tracer_MessagesTracedOnWpfThread), traceMessages);
@@ -178,7 +178,7 @@ namespace WpfTestbench {
 
 
     private static void Tracer_MessagesTracedOnWpfThread(TraceMessage[] traceMessages) {
-      if (traceAction==null) {
+      if (traceAction is null) {
         foreach (TraceMessage traceMessage in traceMessages) {
           WpfTraceViewer.staticTraceMessages.Add(traceMessage);
         }
@@ -231,7 +231,7 @@ namespace WpfTestbench {
 
       foreach (TraceMessage traceMessage in traceMessageEnumerable) {
         string line;
-        if (traceMessage==null) {
+        if (traceMessage is null) {
           line = "";
           //prevent empty line to be generated if next message come late
           previousMessageDate = DateTime.MaxValue;

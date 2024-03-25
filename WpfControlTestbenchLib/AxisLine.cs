@@ -242,7 +242,7 @@ namespace WpfTestbench {
 
       int[] strokeDashesVisible;
       int[] strokeDashesTransparent;
-      if (axisLineContext.TestControl==null) {
+      if (axisLineContext.TestControl is null) {
         if (lineType!=LineTypeEnum.margin) {
           throw new Exception("lineType '' only support for FrameworkElements inheriting from Control.");
         }

@@ -261,7 +261,7 @@ namespace WpfTestbench {
     [ThreadStatic]static string? threadMessageString;
 
 
-    private static void tracePerThread(TraceTypeEnum traceType, bool isNewLine, string? filterText, string message, params object[] args) {
+    private static void tracePerThread(TraceTypeEnum traceType, bool isNewLine, string? filterText, string message, params object[]? args) {
       if (previousTraceType!=traceType) {
         //queue previous message having different type
         if (threadMessageString!=null) {

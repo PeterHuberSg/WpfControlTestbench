@@ -51,7 +51,7 @@ namespace WpfTestbench {
 
 
     public override string ToString() {
-      if (asString==null) {
+      if (asString is null) {
         asString = TraceType.ShortString() + Created.ToString(" HH:mm:ss.fff ") + Message;
       }
       return asString;

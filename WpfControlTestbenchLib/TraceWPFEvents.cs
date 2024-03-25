@@ -145,7 +145,7 @@ namespace WpfTestbench {
     {
       if (isExceptionProcessing) return finalSize;
 
-      if (!isTracing || !IsTracingOn) return baseMethod==null ? finalSize : baseMethod(finalSize);
+      if (!isTracing || !IsTracingOn) return baseMethod is null ? finalSize : baseMethod(finalSize);
 
       string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Arrange";
       TraceStart(baseMethodName, toString(finalSize));
@@ -191,7 +191,7 @@ namespace WpfTestbench {
     {
       if (isExceptionProcessing) return constraint;
 
-      if (!isTracing || !IsTracingOn) return baseMethod==null ? constraint : baseMethod(constraint);
+      if (!isTracing || !IsTracingOn) return baseMethod is null ? constraint : baseMethod(constraint);
 
       string baseMethodName = GetFrameWorkElementName(frameworkElement) + "." + "Measure";
       TraceStart(baseMethodName, toString(constraint));
@@ -332,7 +332,7 @@ namespace WpfTestbench {
       lineStringBuilder.Append('.');
       lineStringBuilder.Append(e.Property.Name);
       lineStringBuilder.Append('=');
-      if (e.NewValue==null) {
+      if (e.NewValue is null) {
         lineStringBuilder.Append("null");
       } else if (e.NewValue is double doubleValue) {
         if (Math.Abs(doubleValue)>100) {
@@ -353,7 +353,7 @@ namespace WpfTestbench {
 
     private static bool isFiltered(string? _/*objectName*/, string? message) {
       #pragma warning disable IDE0046 // Convert to conditional expression
-      if (message==null) return false;
+      if (message is null) return false;
       #pragma warning restore IDE0046
 
       return
@@ -400,8 +400,8 @@ namespace WpfTestbench {
     /// <summary>
     /// Trace one line, including FrameworkElement Name
     /// </summary>
-    public static void TraceLine(FrameworkElement frameworkElement, string traceString) {
-      if (frameworkElement==null) {
+    public static void TraceLine(FrameworkElement? frameworkElement, string traceString) {
+      if (frameworkElement is null) {
         TraceLine(traceString);
       } else {
         TraceLine(GetFrameWorkElementName(frameworkElement) + "." + traceString);

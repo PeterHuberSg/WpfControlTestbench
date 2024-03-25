@@ -68,7 +68,7 @@ namespace WpfTestbench {
         setupWidthHeightMarginBorderTextBoxes();
         setupAlignment();
 
-        if (testControl==null) {
+        if (testControl is null) {
           //TestFrameworkElement does not support Fonts and Padding. Hide them
           ContentColumn.MaxWidth = 0;
           BorderLeftColumn.MaxWidth = 0;
@@ -140,20 +140,32 @@ namespace WpfTestbench {
 
 
     void templateButton_Click(object sender, RoutedEventArgs e) {
-      if (testControl!=null) {
-        var stringBuilder = new StringBuilder();
+      //if (testControl!=null) {
+      //  var stringBuilder = new StringBuilder();
 
-        if (testControl==null) {
-          stringBuilder.AppendLine("'" + testFrameworkElement.GetType() + "' does not inherit from Control");
-        } else if (testControl.Template==null) {
-          stringBuilder.AppendLine("Control has no template assigned.");
-        } else {
-          var xmlSettings = new XmlWriterSettings { Indent = true };
-          using var xmlWriter = XmlWriter.Create(stringBuilder, xmlSettings);
-          System.Windows.Markup.XamlWriter.Save(testControl.Template, xmlWriter);
-        }
-        MessageBox.Show(stringBuilder.ToString());
+      //  if (testControl==null) {
+      //    stringBuilder.AppendLine("'" + testFrameworkElement.GetType() + "' does not inherit from Control");
+      //  } else if (testControl.Template==null) {
+      //    stringBuilder.AppendLine("Control has no template assigned.");
+      //  } else {
+      //    var xmlSettings = new XmlWriterSettings { Indent = true };
+      //    using var xmlWriter = XmlWriter.Create(stringBuilder, xmlSettings);
+      //    System.Windows.Markup.XamlWriter.Save(testControl.Template, xmlWriter);
+      //  }
+      //  MessageBox.Show(stringBuilder.ToString());
+      //}
+      var stringBuilder = new StringBuilder();
+
+      if (testControl is null) {
+        stringBuilder.AppendLine("'" + testFrameworkElement.GetType() + "' does not inherit from Control");
+      } else if (testControl.Template is null) {
+        stringBuilder.AppendLine("Control has no template assigned.");
+      } else {
+        var xmlSettings = new XmlWriterSettings { Indent = true };
+        using var xmlWriter = XmlWriter.Create(stringBuilder, xmlSettings);
+        System.Windows.Markup.XamlWriter.Save(testControl.Template, xmlWriter);
       }
+      MessageBox.Show(stringBuilder.ToString());
     }
 
 
@@ -547,7 +559,7 @@ namespace WpfTestbench {
     //      ---------------
 
     void setupFontComboBoxes() {
-      if (testControl==null) return; //TestFrameworkElement does not support fonts
+      if (testControl is null) return; //TestFrameworkElement does not support fonts
 
       FontFamilyComboBox.SelectedItem = testControl.FontFamily;
       WpfBinding.Setup(FontFamilyComboBox, "SelectedItem", testFrameworkElement, Control.FontFamilyProperty, BindingMode.TwoWay);
