@@ -280,6 +280,8 @@ namespace WpfTestbench {
 
 
     private void TestBench_Loaded(object sender, RoutedEventArgs e) {
+      if (TestControl is null) return; //TestControl is not defined (in XAML)
+
       savePreviousParameters();
       initTestFunctions();
     }
