@@ -335,7 +335,13 @@ namespace WpfTestbench {
       if (e.NewValue is null) {
         lineStringBuilder.Append("null");
       } else if (e.NewValue is double doubleValue) {
-        if (Math.Abs(doubleValue)>100) {
+        if (doubleValue==double.MaxValue) {
+          lineStringBuilder.Append("Double.MaxValue");
+        } else if (doubleValue==double.MinValue) {
+          lineStringBuilder.Append("Double.MinValue");
+        } else if (Math.Abs(doubleValue)>1000000000) {
+          lineStringBuilder.Append(doubleValue.ToString("E"));
+        } else if (Math.Abs(doubleValue)>100) {
           lineStringBuilder.Append(doubleValue.ToString("N0"));
         } else {
           lineStringBuilder.Append(doubleValue.ToString("N2"));
@@ -451,6 +457,7 @@ namespace WpfTestbench {
       }
       traceIndent();
       lineStringBuilder.Append(traceString);
+      lineStringBuilder.Append(" end");
       commitTraceLine();
     }
 
